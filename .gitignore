@@ -1,0 +1,17 @@
+**/node_modules/
+**/venv/
+**/.venv/
+**/__pycache__/
+**/.env
+**/.env.*
+!**/.env.example
+*.py[cod]
+*.sqlite3
+*.db
+*.log
+frontend/build/
+frontend/coverage/
+backend/backend/media/
+/query
+/backend/backend/query
+.DS_Store
