@@ -1,8 +1,5 @@
-import React, {
-  useState,
-  useEffect
-} from "react";
 
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import {
@@ -17,6 +14,7 @@ import {
   Divider,
   Snackbar,
   Alert,
+  CircularProgress
 } from "@mui/material";
 
 import {
@@ -25,148 +23,223 @@ import {
   CheckCircle,
   AutoAwesome,
   Psychology,
-  CloudUpload,
+  CloudUpload
 } from "@mui/icons-material";
 
-
+const API_URL = "http://127.0.0.1:8000/api/resume/";
 
 function ResumeUpload() {
+  const [fileName, setFileName] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [resumeText, setResumeText] =
-    useState("");
+  const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [fileName, setFileName] =
-    useState("");
+  const [atsScore, setAtsScore] = useState(0);
+  const [atsRating, setAtsRating] = useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const [skills, setSkills] = useState([]);
+  const [missingSkills, setMissingSkills] = useState([]);
 
-  const [open, setOpen] =
-    useState(false);
+  const [aiAnalysis, setAiAnalysis] = useState("");
+  const [aiStatus, setAiStatus] = useState("");
 
-  const [errorMessage, setErrorMessage] =
-    useState("");
-const [atsScore, setAtsScore] =
-  useState(0);
+  const [resumeId, setResumeId] = useState(null);
+  const [atsBreakdown, setAtsBreakdown] = useState({});
 
-const [skills, setSkills] =
-  useState([]);
-
-const [missingSkills, setMissingSkills] =
-  useState([]);
-
-const [aiAnalysis, setAiAnalysis] =
-  useState("");
-useEffect(() => {
+  // ==========================================
+  // GET LATEST RESUME ANALYTICS
+  // ==========================================
 
   const fetchResumeAnalytics = async () => {
-
     try {
+      const token = localStorage.getItem("access");
 
-      const token =
-        localStorage.getItem("access");
+      const response = await axios.get(
+        `${API_URL}analytics/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
 
-      const response =
-        await axios.get(
-          "http://127.0.0.1:8000/api/interview/dashboard/",
+      const data = response.data;
+
+      if (data.success) {
+        setResumeId(data.resume_id || null);
+
+        setFileName(data.resume_name || "");
+
+        setAtsScore(data.ats_score || 0);
+
+        setAtsRating(data.ats_rating || "");
+
+        setSkills(data.skills || []);
+
+        setMissingSkills(data.missing_skills || []);
+
+        setAtsBreakdown(data.ats_breakdown || {});
+
+        setAiAnalysis(data.ai_analysis || "");
+
+        setAiStatus(data.ai_status || "processing");
+      }
+
+    } catch (error) {
+      console.log(
+        "Resume Analytics Error:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  // ==========================================
+  // LOAD PREVIOUS RESUME
+  // ==========================================
+
+  useEffect(() => {
+    fetchResumeAnalytics();
+  }, []);
+
+  // ==========================================
+  // AUTOMATIC AI ANALYSIS POLLING
+  // ==========================================
+
+  useEffect(() => {
+    if (!resumeId || aiStatus !== "processing") {
+      return;
+    }
+
+    const token = localStorage.getItem("access");
+
+    const intervalId = setInterval(async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}analytics/`,
           {
             headers: {
-              Authorization:
-                `Bearer ${token}`
+              Authorization: `Bearer ${token}`
             }
           }
         );
 
-      console.log(response.data);
+        const data = response.data;
 
-    } catch (error) {
+        if (data.success && data.resume_id === resumeId) {
+          setAiStatus(data.ai_status || "processing");
 
-      console.log(
-        "Resume Analytics Error:",
-        error
-      );
+          setAiAnalysis(data.ai_analysis || "");
 
-    }
+          setAtsScore(data.ats_score || 0);
 
-  };
+          setAtsRating(data.ats_rating || "");
 
-  fetchResumeAnalytics();
+          setSkills(data.skills || []);
 
-}, []);
+          setMissingSkills(data.missing_skills || []);
+
+          setAtsBreakdown(data.ats_breakdown || {});
+
+          // Stop polling automatically when status changes.
+          if (
+            ["completed", "fallback", "failed"].includes(
+              data.ai_status
+            )
+          ) {
+            clearInterval(intervalId);
+          }
+        }
+
+      } catch (error) {
+        console.log(
+          "AI STATUS CHECK ERROR:",
+          error.response?.data || error.message
+        );
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+
+  }, [resumeId, aiStatus]);
+
   // ==========================================
   // HANDLE RESUME UPLOAD
   // ==========================================
 
   const handleUpload = async (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
 
     try {
+      if (file.type !== "application/pdf") {
+        setErrorMessage("Only PDF files allowed");
+        e.target.value = "";
+        return;
+      }
 
-      const file = e.target.files[0];
-
-      if (!file) return;
-
-      // VALIDATION
-      if (
-        file.type !== "application/pdf"
-      ) {
-
-        setErrorMessage(
-          "Only PDF files allowed"
-        );
-
+      if (file.size > 10 * 1024 * 1024) {
+        setErrorMessage("PDF size must be below 10 MB");
+        e.target.value = "";
         return;
       }
 
       setFileName(file.name);
-
       setLoading(true);
+
+      // Reset previous results
+      setAtsScore(0);
+      setAtsRating("");
+      setSkills([]);
+      setMissingSkills([]);
+      setAiAnalysis("");
+      setAiStatus("processing");
+      setResumeId(null);
+      setAtsBreakdown({});
 
       const formData = new FormData();
 
       formData.append("file", file);
 
-      // JWT TOKEN
-      const token =
-        localStorage.getItem("access");
+      const token = localStorage.getItem("access");
 
-      // API CALL
-    const response = await axios.post(
-  "http://127.0.0.1:8000/api/resume/upload/",
-  formData,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data"
-    }
-  }
-);
-
-setAtsScore(response.data.ats_score);
-
-setSkills(
-  response.data.skills || []
-);
-
-setMissingSkills(
-  response.data.missing_skills || []
-);
-
-setAiAnalysis(
-  response.data.ai_analysis || ""
-);
-
-      console.log(response.data);
-
-      // SAVE RESPONSE
-      setResumeText(
-        response.data.resume_text
+      const response = await axios.post(
+        `${API_URL}upload/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data"
+          }
+        }
       );
+
+      const data = response.data;
+
+      // Save upload response
+      setResumeId(data.resume_id || null);
+
+      setAtsScore(data.ats_score || 0);
+
+      setAtsRating(data.ats_rating || "");
+
+      setSkills(data.skills || []);
+
+      setMissingSkills(data.missing_skills || []);
+
+      setAtsBreakdown(data.ats_breakdown || {});
+
+      setAiAnalysis(data.ai_analysis || "");
+
+      setAiStatus(data.ai_status || "processing");
+
+      console.log("RESUME UPLOAD:", data);
 
       setOpen(true);
 
     } catch (error) {
-
-      console.log(error);
+      console.log("UPLOAD ERROR:", error);
 
       setErrorMessage(
         error.response?.data?.message ||
@@ -174,9 +247,31 @@ setAiAnalysis(
       );
 
     } finally {
-
       setLoading(false);
+      e.target.value = "";
+    }
+  };
 
+  // ==========================================
+  // AI STATUS LABEL
+  // ==========================================
+
+  const getStatusLabel = () => {
+    switch (aiStatus) {
+      case "processing":
+        return "AI is analyzing your resume...";
+
+      case "completed":
+        return "AI Analysis Completed";
+
+      case "fallback":
+        return "Rule-based Analysis Available";
+
+      case "failed":
+        return "AI Analysis Failed";
+
+      default:
+        return "Waiting for AI Analysis";
     }
   };
 
@@ -188,7 +283,7 @@ setAiAnalysis(
           position: "relative",
           overflow: "hidden",
           borderRadius: "32px",
-          padding: 4,
+          padding: { xs: 2, sm: 3, md: 4 },
 
           background:
             "linear-gradient(145deg,#020617,#0f172a,#111827)",
@@ -204,32 +299,29 @@ setAiAnalysis(
           transition: "0.4s ease",
 
           "&:hover": {
-
-            transform: "translateY(-6px)",
-
             boxShadow:
-              "0px 30px 80px rgba(59,130,246,0.25)",
-          },
+              "0px 30px 80px rgba(59,130,246,0.25)"
+          }
         }}
       >
-
         {/* GLOW */}
+
         <Box
           sx={{
             position: "absolute",
             width: 250,
             height: 250,
             borderRadius: "50%",
-
             background:
               "radial-gradient(circle,rgba(59,130,246,0.25),transparent)",
-
             top: -100,
             right: -100,
+            pointerEvents: "none"
           }}
         />
 
         {/* HEADER */}
+
         <Stack
           direction="row"
           alignItems="center"
@@ -240,17 +332,13 @@ setAiAnalysis(
             sx={{
               width: 65,
               height: 65,
-
               background:
                 "linear-gradient(135deg,#3B82F6,#8B5CF6)",
-
               boxShadow:
-                "0px 10px 30px rgba(59,130,246,0.4)",
+                "0px 10px 30px rgba(59,130,246,0.4)"
             }}
           >
-            <Description
-              sx={{ fontSize: 35 }}
-            />
+            <Description sx={{ fontSize: 35 }} />
           </Avatar>
 
           <Box>
@@ -260,42 +348,36 @@ setAiAnalysis(
               sx={{
                 color: "white",
                 letterSpacing: 1,
+                fontSize: { xs: "24px", sm: "32px" }
               }}
             >
               AI Resume Analyzer
             </Typography>
 
             <Typography
-              sx={{
-                color: "#94A3B8",
-                mt: 0.5,
-              }}
+              sx={{ color: "#94A3B8", mt: 0.5 }}
             >
-              Upload your resume and get
-              AI-powered career insights.
+              Upload your resume and get AI-powered career insights.
             </Typography>
           </Box>
         </Stack>
 
         {/* FEATURE CHIPS */}
+
         <Stack
           direction="row"
           spacing={1.5}
           flexWrap="wrap"
+          useFlexGap
           mb={4}
         >
-
           <Chip
             icon={<AutoAwesome />}
             label="ATS Optimization"
             sx={{
-              bgcolor:
-                "rgba(59,130,246,0.15)",
-
+              bgcolor: "rgba(59,130,246,0.15)",
               color: "#60A5FA",
-
-              border:
-                "1px solid rgba(59,130,246,0.3)",
+              border: "1px solid rgba(59,130,246,0.3)"
             }}
           />
 
@@ -303,13 +385,9 @@ setAiAnalysis(
             icon={<Psychology />}
             label="AI Analysis"
             sx={{
-              bgcolor:
-                "rgba(139,92,246,0.15)",
-
+              bgcolor: "rgba(139,92,246,0.15)",
               color: "#A78BFA",
-
-              border:
-                "1px solid rgba(139,92,246,0.3)",
+              border: "1px solid rgba(139,92,246,0.3)"
             }}
           />
 
@@ -317,65 +395,43 @@ setAiAnalysis(
             icon={<CheckCircle />}
             label="Skill Detection"
             sx={{
-              bgcolor:
-                "rgba(16,185,129,0.15)",
-
+              bgcolor: "rgba(16,185,129,0.15)",
               color: "#34D399",
-
-              border:
-                "1px solid rgba(16,185,129,0.3)",
+              border: "1px solid rgba(16,185,129,0.3)"
             }}
           />
-
         </Stack>
 
         {/* UPLOAD AREA */}
+
         <Box
           sx={{
-            border:
-              "2px dashed rgba(255,255,255,0.12)",
-
+            border: "2px dashed rgba(255,255,255,0.12)",
             borderRadius: "24px",
-
-            padding: 5,
-
+            padding: { xs: 3, sm: 5 },
             textAlign: "center",
-
-            background:
-              "rgba(255,255,255,0.03)",
-
+            background: "rgba(255,255,255,0.03)",
             transition: "0.3s",
 
             "&:hover": {
-
-              border:
-                "2px dashed rgba(59,130,246,0.6)",
-
-              background:
-                "rgba(59,130,246,0.05)",
-            },
+              border: "2px dashed rgba(59,130,246,0.6)",
+              background: "rgba(59,130,246,0.05)"
+            }
           }}
         >
-
           <Avatar
             sx={{
               width: 90,
               height: 90,
-
               margin: "auto",
-
               mb: 3,
-
               background:
                 "linear-gradient(135deg,#2563EB,#7C3AED)",
-
               boxShadow:
-                "0px 15px 40px rgba(37,99,235,0.4)",
+                "0px 15px 40px rgba(37,99,235,0.4)"
             }}
           >
-            <CloudUpload
-              sx={{ fontSize: 50 }}
-            />
+            <CloudUpload sx={{ fontSize: 50 }} />
           </Avatar>
 
           <Typography
@@ -388,121 +444,89 @@ setAiAnalysis(
           </Typography>
 
           <Typography
-            sx={{
-              color: "#94A3B8",
-              mb: 4,
-            }}
+            sx={{ color: "#94A3B8", mb: 4 }}
           >
-            Supported Format: PDF • Max
-            Size: 10MB
+            Supported Format: PDF • Max Size: 10MB
           </Typography>
 
           <Button
             component="label"
             variant="contained"
             size="large"
+            disabled={loading}
             startIcon={<UploadFile />}
             sx={{
-
               px: 5,
               py: 1.7,
-
               borderRadius: "16px",
-
               fontSize: "16px",
-
               fontWeight: "bold",
-
               textTransform: "none",
-
               background:
                 "linear-gradient(135deg,#3B82F6,#8B5CF6)",
-
               boxShadow:
                 "0px 10px 30px rgba(59,130,246,0.35)",
 
               "&:hover": {
-
                 background:
                   "linear-gradient(135deg,#2563EB,#7C3AED)",
-
-                transform: "scale(1.03)",
-              },
+                transform: "scale(1.03)"
+              }
             }}
           >
-
-            Upload Resume
+            {loading ? "Uploading..." : "Upload Resume"}
 
             <input
               hidden
               type="file"
-              accept=".pdf"
+              accept=".pdf,application/pdf"
               onChange={handleUpload}
             />
           </Button>
         </Box>
 
-        {/* LOADING */}
+        {/* UPLOAD LOADING */}
+
         {loading && (
-
           <Box mt={4}>
-
             <Typography
-              sx={{
-                color: "#94A3B8",
-                mb: 1,
-              }}
+              sx={{ color: "#94A3B8", mb: 1 }}
             >
-              AI is analyzing your
-              resume...
+              Uploading resume...
             </Typography>
 
             <LinearProgress
               sx={{
                 height: 10,
-                borderRadius: 10,
+                borderRadius: 10
               }}
             />
-
           </Box>
         )}
 
         {/* FILE INFO */}
-        {fileName && (
 
+        {fileName && (
           <Paper
             elevation={0}
             sx={{
-
               mt: 4,
               p: 3,
-
               borderRadius: "20px",
-
-              background:
-                "rgba(255,255,255,0.04)",
-
-              border:
-                "1px solid rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.06)"
             }}
           >
-
             <Stack
               direction="row"
               alignItems="center"
               spacing={2}
             >
-
-              <Avatar
-                sx={{
-                  bgcolor: "#2563EB",
-                }}
-              >
+              <Avatar sx={{ bgcolor: "#2563EB" }}>
                 <Description />
               </Avatar>
 
               <Box>
-
                 <Typography
                   color="white"
                   fontWeight="bold"
@@ -512,214 +536,289 @@ setAiAnalysis(
 
                 <Typography
                   variant="body2"
-                  sx={{
-                    color: "#94A3B8",
-                  }}
+                  sx={{ color: "#94A3B8" }}
                 >
-                  Resume uploaded
-                  successfully
+                  Resume uploaded successfully
                 </Typography>
-
               </Box>
             </Stack>
           </Paper>
         )}
-<Paper sx={{ p: 3, mb: 3 }}>
 
-  <Typography variant="h6">
-    ATS Score
-  </Typography>
+        {/* ATS SCORE */}
 
-  <LinearProgress
-    variant="determinate"
-    value={atsScore}
-    sx={{
-      height: 12,
-      borderRadius: 5,
-      mt: 2
-    }}
-  />
-<Paper sx={{ p: 3, mb: 3 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            mt: 3,
+            mb: 3,
+            background: "rgba(255,255,255,0.04)",
+            color: "white"
+          }}
+        >
+          <Typography variant="h6">
+            ATS Score
+          </Typography>
 
-  <Typography variant="h6">
-    Detected Skills
-  </Typography>
-
-  <Stack
-    direction="row"
-    spacing={1}
-    flexWrap="wrap"
-  >
-
-    {skills.map((skill,index) => (
-
-      <Chip
-        key={index}
-        label={skill}
-        color="success"
-      />
-
-    ))}
-
-  </Stack>
-
-</Paper> 
-<Paper sx={{ p: 3, mb: 3 }}>
-
-  <Typography variant="h6">
-    Missing Skills
-  </Typography>
-
-  <Stack
-    direction="row"
-    spacing={1}
-    flexWrap="wrap"
-  >
-
-    {missingSkills.map((skill,index) => (
-
-      <Chip
-        key={index}
-        label={skill}
-        color="error"
-      />
-
-    ))}
-
-  </Stack>
-
-</Paper>  
-<Paper sx={{ p: 3 }}>
-
-  <Typography variant="h6">
-    AI Resume Analysis
-  </Typography>
-
-  <Typography
-    sx={{
-      mt: 2,
-      whiteSpace: "pre-line"
-    }}
-  >
-    {aiAnalysis}
-  </Typography>
-
-</Paper>
-  <Typography
-    sx={{ mt: 1 }}
-  >
-    {atsScore}%
-  </Typography>
-
-</Paper> 
-
-        {/* RESULT */}
-        {resumeText && (
-
-          <Paper
-            elevation={0}
-            sx={{
-
-              mt: 4,
-
-              borderRadius: "24px",
-
-              overflow: "hidden",
-
-              background:
-                "rgba(255,255,255,0.04)",
-
-              border:
-                "1px solid rgba(255,255,255,0.06)",
-            }}
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            sx={{ mt: 1 }}
           >
+            {atsScore}%
+          </Typography>
 
-            {/* HEADER */}
-            <Box
+          <LinearProgress
+            variant="determinate"
+            value={atsScore}
+            sx={{
+              height: 12,
+              borderRadius: 5,
+              mt: 2
+            }}
+          />
+
+          {atsRating && (
+            <Chip
+              label={atsRating}
               sx={{
-                px: 3,
-                py: 2,
-
-                background:
-                  "linear-gradient(135deg,#1E293B,#0F172A)",
+                mt: 2,
+                color: "#60A5FA",
+                bgcolor: "rgba(59,130,246,0.15)"
               }}
-            >
+            />
+          )}
 
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                color="white"
-              >
-                AI Resume Preview
+          {Object.keys(atsBreakdown).length > 0 && (
+            <Box mt={3}>
+              <Typography fontWeight="bold" mb={2}>
+                Score Breakdown
               </Typography>
 
+              {Object.entries(atsBreakdown).map(
+                ([key, value]) => (
+                  <Stack
+                    key={key}
+                    direction="row"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography
+                      sx={{
+                        color: "#CBD5E1",
+                        textTransform: "capitalize"
+                      }}
+                    >
+                      {key}
+                    </Typography>
+
+                    <Typography color="white">
+                      {value} points
+                    </Typography>
+                  </Stack>
+                )
+              )}
             </Box>
+          )}
+        </Paper>
 
-            <Divider />
+        {/* DETECTED SKILLS */}
 
-            {/* CONTENT */}
-            <Box
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            mb: 3,
+            background: "rgba(255,255,255,0.04)",
+            color: "white"
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Detected Skills
+          </Typography>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            useFlexGap
+          >
+            {skills.length > 0 ? (
+              skills.map((skill, index) => (
+                <Chip
+                  key={index}
+                  label={skill}
+                  color="success"
+                />
+              ))
+            ) : (
+              <Typography color="#94A3B8">
+                No skills detected yet.
+              </Typography>
+            )}
+          </Stack>
+        </Paper>
+
+        {/* MISSING SKILLS */}
+
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            mb: 3,
+            background: "rgba(255,255,255,0.04)",
+            color: "white"
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Missing Skills
+          </Typography>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            useFlexGap
+          >
+            {missingSkills.length > 0 ? (
+              missingSkills.map((skill, index) => (
+                <Chip
+                  key={index}
+                  label={skill}
+                  color="error"
+                />
+              ))
+            ) : (
+              <Typography color="#94A3B8">
+                No job-specific missing skills identified.
+                Add a job description for targeted skill matching.
+              </Typography>
+            )}
+          </Stack>
+        </Paper>
+
+        {/* AI RESUME ANALYSIS */}
+
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            background: "rgba(255,255,255,0.04)",
+            color: "white"
+          }}
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            mb={2}
+          >
+            <Psychology sx={{ color: "#A78BFA" }} />
+
+            <Typography variant="h6">
+              AI Resume Analysis
+            </Typography>
+          </Stack>
+
+          {aiStatus === "processing" && (
+            <Box>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                mb={2}
+              >
+                <CircularProgress
+                  size={22}
+                  sx={{ color: "#60A5FA" }}
+                />
+
+                <Typography color="#60A5FA">
+                  {getStatusLabel()}
+                </Typography>
+              </Stack>
+
+              <LinearProgress />
+              <Typography
+                variant="body2"
+                sx={{ color: "#94A3B8", mt: 2 }}
+              >
+                This section will update automatically when AI analysis finishes.
+              </Typography>
+            </Box>
+          )}
+
+          {aiStatus === "completed" && (
+            <Chip
+              label={getStatusLabel()}
+              color="success"
+              sx={{ mb: 2 }}
+            />
+          )}
+
+          {aiStatus === "fallback" && (
+            <Alert severity="warning" sx={{ mb: 2 }}>
+              Ollama AI was unavailable. Showing fallback analysis.
+            </Alert>
+          )}
+
+          {aiStatus === "failed" && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              AI analysis failed. Please check Ollama and try again.
+            </Alert>
+          )}
+
+          {aiAnalysis ? (
+            <Typography
               sx={{
-                p: 3,
-                maxHeight: 350,
-                overflowY: "auto",
+                mt: 1,
+                whiteSpace: "pre-line",
+                lineHeight: 1.9,
+                color: "#CBD5E1"
               }}
             >
-
-              <Typography
-                sx={{
-                  color: "#CBD5E1",
-                  lineHeight: 2,
-                  whiteSpace: "pre-line",
-                  fontSize: "15px",
-                }}
-              >
-                {resumeText.substring(
-                  0,
-                  3000
-                )}
+              {aiAnalysis}
+            </Typography>
+          ) : (
+            aiStatus !== "processing" && (
+              <Typography color="#94A3B8">
+                AI analysis is not available.
               </Typography>
-
-            </Box>
-          </Paper>
-        )}
+            )
+          )}
+        </Paper>
 
       </Paper>
 
       {/* SUCCESS SNACKBAR */}
+
       <Snackbar
         open={open}
         autoHideDuration={3000}
         onClose={() => setOpen(false)}
         anchorOrigin={{
           vertical: "top",
-          horizontal: "right",
+          horizontal: "right"
         }}
       >
-        <Alert
-          severity="success"
-          variant="filled"
-        >
+        <Alert severity="success" variant="filled">
           Resume Uploaded Successfully
         </Alert>
       </Snackbar>
 
       {/* ERROR SNACKBAR */}
+
       <Snackbar
         open={!!errorMessage}
-        autoHideDuration={3000}
-        onClose={() =>
-          setErrorMessage("")
-        }
+        autoHideDuration={4000}
+        onClose={() => setErrorMessage("")}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right",
+          horizontal: "right"
         }}
       >
-        <Alert
-          severity="error"
-          variant="filled"
-        >
+        <Alert severity="error" variant="filled">
           {errorMessage}
         </Alert>
       </Snackbar>
