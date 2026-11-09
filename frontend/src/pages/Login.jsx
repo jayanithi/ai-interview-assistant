@@ -30,6 +30,7 @@ import {
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
+import ThemeToggle from "../components/ThemeToggle";
 
 const AuthPage = () => {
 
@@ -193,13 +194,22 @@ const handleRegister = async () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background:
-          "linear-gradient(135deg,#020617,#0f172a,#111827)",
+        backgroundColor: "background.default",
         overflow: "hidden",
         position: "relative",
-        p: 2,
+        p: { xs: 1.5, sm: 2 },
       }}
     >
+      <Box
+        sx={{
+          position: "fixed",
+          top: { xs: 12, sm: 16 },
+          right: { xs: 12, sm: 16 },
+          zIndex: (theme) => theme.zIndex.tooltip,
+        }}
+      >
+        <ThemeToggle />
+      </Box>
 
       {/* GLOW EFFECT */}
 
@@ -238,18 +248,17 @@ const handleRegister = async () => {
         sx={{
           width: "100%",
           maxWidth: "1100px",
-          borderRadius: "35px",
+          borderRadius: { xs: "22px", sm: "35px" },
           overflow: "hidden",
           display: "flex",
           flexDirection: {
             xs: "column",
             md: "row",
           },
-          background:
-            "rgba(255,255,255,0.05)",
+          backgroundColor: "background.paper",
           backdropFilter: "blur(20px)",
-          border:
-            "1px solid rgba(255,255,255,0.08)",
+          border: "1px solid",
+          borderColor: "divider",
           boxShadow:
             "0 25px 80px rgba(0,0,0,0.45)",
         }}
@@ -260,10 +269,12 @@ const handleRegister = async () => {
         <Box
           sx={{
             flex: 1,
-            p: 6,
-            background:
-              "linear-gradient(180deg,#1E3A8A,#2563EB,#7C3AED)",
-            color: "white",
+            p: { xs: 3, sm: 4, md: 6 },
+            background: (theme) =>
+              theme.palette.mode === "dark"
+                ? "linear-gradient(180deg,#1E3A8A,#2563EB,#7C3AED)"
+                : theme.palette.background.paper,
+            color: "text.primary",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -273,9 +284,9 @@ const handleRegister = async () => {
 
           <Avatar
             sx={{
-              width: 90,
-              height: 90,
-              mb: 4,
+              width: { xs: 64, sm: 90 },
+              height: { xs: 64, sm: 90 },
+              mb: { xs: 2, sm: 4 },
               background:
                 "rgba(255,255,255,0.15)",
               backdropFilter: "blur(10px)",
@@ -283,7 +294,7 @@ const handleRegister = async () => {
           >
             <AutoAwesome
               sx={{
-                fontSize: 45,
+                fontSize: { xs: 32, sm: 45 },
               }}
             />
           </Avatar>
@@ -291,9 +302,10 @@ const handleRegister = async () => {
           <Typography
             variant="h2"
             fontWeight="bold"
-            mb={3}
+            mb={{ xs: 2, sm: 3 }}
             sx={{
               lineHeight: 1.1,
+              fontSize: { xs: "2rem", sm: "2.75rem", md: "3.75rem" },
             }}
           >
             AI Interview
@@ -318,18 +330,16 @@ const handleRegister = async () => {
 
           <Stack
             direction="row"
-            spacing={2}
-            mt={5}
+            spacing={{ xs: 1.5, sm: 2 }}
+            mt={{ xs: 3, sm: 5 }}
           >
 
             <Paper
               sx={{
-                px: 3,
+                px: { xs: 2, sm: 3 },
                 py: 2,
                 borderRadius: "18px",
-                background:
-                  "rgba(255,255,255,0.12)",
-                color: "white",
+                backgroundColor: "action.hover",
               }}
             >
               <Typography
@@ -349,9 +359,7 @@ const handleRegister = async () => {
                 px: 3,
                 py: 2,
                 borderRadius: "18px",
-                background:
-                  "rgba(255,255,255,0.12)",
-                color: "white",
+                backgroundColor: "action.hover",
               }}
             >
               <Typography
@@ -375,7 +383,8 @@ const handleRegister = async () => {
           sx={{
             flex: 1,
             p: {
-              xs: 4,
+              xs: 2.5,
+              sm: 4,
               md: 6,
             },
             display: "flex",
@@ -387,8 +396,9 @@ const handleRegister = async () => {
           <Typography
             variant="h3"
             fontWeight="bold"
-            color="white"
+            color="text.primary"
             mb={1}
+            sx={{ fontSize: { xs: "1.8rem", sm: "2.25rem", md: "3rem" } }}
           >
             {
               isLogin
@@ -398,7 +408,7 @@ const handleRegister = async () => {
           </Typography>
 
           <Typography
-            color="#94A3B8"
+            color="text.secondary"
             mb={4}
           >
             {
@@ -423,26 +433,26 @@ const handleRegister = async () => {
                       e.target.value
                     )
                   }
-                  InputProps={{
+                  slotProps={{
+                    input: {
                     startAdornment: (
                       <InputAdornment position="start">
                         <Person />
                       </InputAdornment>
                     ),
+                    },
                   }}
                   sx={{
                     "& .MuiOutlinedInput-root":
                       {
                         borderRadius:
                           "18px",
-                        background:
-                          "rgba(255,255,255,0.04)",
-                        color: "white",
+                        backgroundColor: "background.default",
+                        color: "text.primary",
                       },
 
                     "& fieldset": {
-                      borderColor:
-                        "rgba(255,255,255,0.08)",
+                      borderColor: "divider",
                     },
                   }}
                 />
@@ -460,26 +470,26 @@ const handleRegister = async () => {
                   e.target.value
                 )
               }
-              InputProps={{
+              slotProps={{
+                input: {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Email />
                   </InputAdornment>
                 ),
+                },
               }}
               sx={{
                 "& .MuiOutlinedInput-root":
                   {
                     borderRadius:
                       "18px",
-                    background:
-                      "rgba(255,255,255,0.04)",
-                    color: "white",
+                    backgroundColor: "background.default",
+                    color: "text.primary",
                   },
 
                 "& fieldset": {
-                  borderColor:
-                    "rgba(255,255,255,0.08)",
+                  borderColor: "divider",
                 },
               }}
             />
@@ -500,7 +510,8 @@ const handleRegister = async () => {
                   e.target.value
                 )
               }
-              InputProps={{
+              slotProps={{
+                input: {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Lock />
@@ -526,20 +537,19 @@ const handleRegister = async () => {
                     </IconButton>
                   </InputAdornment>
                 ),
+                },
               }}
               sx={{
                 "& .MuiOutlinedInput-root":
                   {
                     borderRadius:
                       "18px",
-                    background:
-                      "rgba(255,255,255,0.04)",
-                    color: "white",
+                    backgroundColor: "background.default",
+                    color: "text.primary",
                   },
 
                 "& fieldset": {
-                  borderColor:
-                    "rgba(255,255,255,0.08)",
+                  borderColor: "divider",
                 },
               }}
             />
@@ -549,17 +559,19 @@ const handleRegister = async () => {
             {
               isLogin && (
                 <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={{ xs: 0.5, sm: 0 }}
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                  }}
                 >
 
                   <FormControlLabel
                     control={<Checkbox />}
                     label="Remember Me"
                     sx={{
-                      color:
-                        "#CBD5E1",
+                      color: "text.secondary",
                     }}
                   />
 
@@ -629,7 +641,7 @@ const handleRegister = async () => {
 
             <Divider
               sx={{
-                color: "#64748B",
+                color: "text.secondary",
               }}
             >
               OR CONTINUE WITH
@@ -638,8 +650,9 @@ const handleRegister = async () => {
             {/* SOCIAL */}
 
             <Stack
-              direction="row"
+              direction={{ xs: "column", sm: "row" }}
               spacing={2}
+              sx={{ width: "100%" }}
             >
 
               <Button
@@ -650,9 +663,8 @@ const handleRegister = async () => {
                   py: 1.5,
                   borderRadius:
                     "16px",
-                  color: "white",
-                  borderColor:
-                    "rgba(255,255,255,0.1)",
+                  color: "text.primary",
+                  borderColor: "divider",
                 }}
               >
                 Google
@@ -666,9 +678,8 @@ const handleRegister = async () => {
                   py: 1.5,
                   borderRadius:
                     "16px",
-                  color: "white",
-                  borderColor:
-                    "rgba(255,255,255,0.1)",
+                  color: "text.primary",
+                  borderColor: "divider",
                 }}
               >
                 GitHub
@@ -679,9 +690,9 @@ const handleRegister = async () => {
             {/* SWITCH */}
 
             <Typography
-              textAlign="center"
-              color="#94A3B8"
+              color="text.secondary"
               mt={2}
+              sx={{ textAlign: "center" }}
             >
 
               {

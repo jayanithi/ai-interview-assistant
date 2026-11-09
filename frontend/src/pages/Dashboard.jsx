@@ -83,10 +83,9 @@ function Dashboard() {
       <Box
         sx={{
           minHeight: "100vh",
-          background:
-            "linear-gradient(to right, #020617, #0f172a, #1e293b)",
-          color: "white",
-          py: 5,
+          backgroundColor: "background.default",
+          color: "text.primary",
+          py: { xs: 3, sm: 4, md: 5 },
         }}
       >
         <Container maxWidth="lg">
@@ -97,13 +96,14 @@ function Dashboard() {
               variant="h3"
               fontWeight="bold"
               gutterBottom
+              sx={{ fontSize: { xs: "1.8rem", sm: "2.25rem", md: "3rem" } }}
             >
               Analytics Dashboard
             </Typography>
 
             <Typography
               variant="h6"
-              sx={{ color: "#cbd5e1" }}
+              sx={{ color: "text.secondary", fontSize: { xs: "1rem", sm: "1.25rem" } }}
             >
               Track your interview performance with AI-powered
               insights.
@@ -112,24 +112,20 @@ function Dashboard() {
 
           {/* ================= STATS CARDS ================= */}
 
-          <Grid container spacing={4}>
+          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
             {/* TOTAL INTERVIEWS */}
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card
                 sx={{
-                  background: "#1e293b",
+                  backgroundColor: "background.paper",
                   borderRadius: "20px",
-                  color: "white",
+                  color: "text.primary",
                   boxShadow: "0px 0px 20px rgba(99,102,241,0.3)",
                 }}
               >
-                <CardContent>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
+                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Box>
                       <Typography variant="h6">
                         Total Interviews
@@ -156,21 +152,17 @@ function Dashboard() {
 
             {/* AVERAGE SCORE */}
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card
                 sx={{
-                  background: "#1e293b",
+                  backgroundColor: "background.paper",
                   borderRadius: "20px",
-                  color: "white",
+                  color: "text.primary",
                   boxShadow: "0px 0px 20px rgba(168,85,247,0.3)",
                 }}
               >
-                <CardContent>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
+                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Box>
                       <Typography variant="h6">
                         Average Score
@@ -197,23 +189,23 @@ function Dashboard() {
 
             {/* START INTERVIEW */}
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card
                 sx={{
-                  background: "#1e293b",
+                  backgroundColor: "background.paper",
                   borderRadius: "20px",
-                  color: "white",
+                  color: "text.primary",
                   boxShadow: "0px 0px 20px rgba(59,130,246,0.3)",
                 }}
               >
-                <CardContent>
+                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                   <Typography variant="h6" gutterBottom>
                     Start AI Interview
                   </Typography>
 
                   <Typography
                     variant="body1"
-                    sx={{ mb: 3, color: "#cbd5e1" }}
+                    sx={{ mb: 3, color: "text.secondary" }}
                   >
                     Practice with real-time AI interview
                     questions.
@@ -245,12 +237,13 @@ function Dashboard() {
               variant="h4"
               fontWeight="bold"
               gutterBottom
+              sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}
             >
               Resume Analyzer
             </Typography>
 
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
+            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+              <Grid size={12}>
                 <ResumeUpload />
               </Grid>
             </Grid>
@@ -263,25 +256,27 @@ function Dashboard() {
               variant="h4"
               fontWeight="bold"
               gutterBottom
+              sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}
             >
               Recent Interviews
             </Typography>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
               {dashboardData.recent_interviews?.map(
                 (item, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                  <Grid size={{ xs: 12, md: 6 }} key={index}>
                     <Card
                       sx={{
-                        background: "#1e293b",
+                        backgroundColor: "background.paper",
                         borderRadius: "18px",
-                        color: "white",
+                        color: "text.primary",
                       }}
                     >
                       <CardContent>
                         <Typography
                           variant="h5"
                           fontWeight="bold"
+                          sx={{ overflowWrap: "anywhere", fontSize: { xs: "1.15rem", sm: "1.5rem" } }}
                         >
                           {item.role}
                         </Typography>
@@ -290,7 +285,7 @@ function Dashboard() {
                           sx={{
                             mt: 2,
                             mb: 1,
-                            color: "#cbd5e1",
+                            color: "text.secondary",
                           }}
                         >
                           Score: {item.score}%
@@ -317,11 +312,12 @@ function Dashboard() {
           <Box mt={6}>
             <Card
               sx={{
-                background:
-                  "linear-gradient(to right,#312e81,#581c87)",
-                color: "white",
+                backgroundColor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
+                color: "text.primary",
                 borderRadius: "25px",
-                p: 2,
+                p: { xs: 1, sm: 2 },
               }}
             >
               <CardContent>
@@ -329,6 +325,7 @@ function Dashboard() {
                   variant="h4"
                   fontWeight="bold"
                   gutterBottom
+                  sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}
                 >
                   AI Performance Insight
                 </Typography>

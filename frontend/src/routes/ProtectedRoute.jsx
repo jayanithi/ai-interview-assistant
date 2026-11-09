@@ -305,10 +305,8 @@ const ProtectedRoute = ({
 
           textAlign: "center",
 
-          background:
-            "linear-gradient(135deg,#020617,#0f172a,#111827)",
-
-          color: "white",
+          backgroundColor: "background.default",
+          color: "text.primary",
         }}
       >
 
@@ -339,7 +337,7 @@ const ProtectedRoute = ({
 
         <Typography
           sx={{
-            color: "#94A3B8",
+            color: "text.secondary",
 
             maxWidth: "500px",
 

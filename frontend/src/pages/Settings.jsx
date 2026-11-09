@@ -269,7 +269,7 @@ const Settings = () => {
           background:
             mode === "dark"
               ? "linear-gradient(to bottom right,#020617,#0f172a,#111827)"
-              : "linear-gradient(to bottom right,#f8fafc,#e2e8f0,#ffffff)",
+              : "#FFFFFF",
 
            px: {
       xs: 2,
@@ -314,17 +314,18 @@ const Settings = () => {
 
           <Box
             sx={{
-              p: 5,
+              p: { xs: 3, sm: 4, md: 5 },
 
-              background:
-                "linear-gradient(135deg,#2563EB,#7C3AED)",
-
-              color: "white",
+              backgroundColor: "background.paper",
+              borderBottom: 1,
+              borderColor: "divider",
+              color: "text.primary",
             }}
           >
             <Typography
               variant="h3"
               fontWeight="bold"
+              sx={{ fontSize: { xs: "1.8rem", sm: "2.25rem", md: "3rem" } }}
             >
               Settings
             </Typography>
@@ -338,7 +339,7 @@ const Settings = () => {
 
           {/* CONTENT */}
 
-          <Box p={5}>
+          <Box sx={{ p: { xs: 2, sm: 3, md: 5 } }}>
             <Stack spacing={4}>
 
               {/* THEME */}
@@ -346,25 +347,28 @@ const Settings = () => {
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
 
                   borderRadius: "25px",
 
                   background:
                     mode === "dark"
                       ? "rgba(255,255,255,0.03)"
-                      : "#f8fafc",
+                      : "#FFFFFF",
                 }}
               >
                 <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={{ xs: 1, sm: 2 }}
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: { xs: "stretch", sm: "center" },
+                  }}
                 >
                   <Stack
                     direction="row"
                     spacing={2}
-                    alignItems="center"
+                    sx={{ alignItems: "center" }}
                   >
                     <Avatar
                       sx={{
@@ -374,7 +378,7 @@ const Settings = () => {
                       <Palette />
                     </Avatar>
 
-                    <Box>
+                    <Box sx={{ minWidth: 0 }}>
                       <Typography fontWeight="bold">
                         Appearance Theme
                       </Typography>
@@ -390,6 +394,7 @@ const Settings = () => {
                   </Stack>
 
                   <FormControlLabel
+                    sx={{ alignSelf: { xs: "flex-end", sm: "center" } }}
                     control={
                       <Switch
                         checked={
@@ -416,20 +421,20 @@ const Settings = () => {
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
 
                   borderRadius: "25px",
 
                   background:
                     mode === "dark"
                       ? "rgba(255,255,255,0.03)"
-                      : "#f8fafc",
+                      : "#FFFFFF",
                 }}
               >
                 <Stack
                   direction="row"
                   spacing={2}
-                  alignItems="center"
+                  sx={{ minWidth: 0, alignItems: "center" }}
                 >
                   <Avatar
                     sx={{
@@ -439,7 +444,7 @@ const Settings = () => {
                     <Notifications />
                   </Avatar>
 
-                  <Box flex={1}>
+                  <Box flex={1} sx={{ minWidth: 0 }}>
                     <Typography fontWeight="bold">
                       Notifications
                     </Typography>
@@ -467,21 +472,21 @@ const Settings = () => {
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
 
                   borderRadius: "25px",
 
                   background:
                     mode === "dark"
                       ? "rgba(255,255,255,0.03)"
-                      : "#f8fafc",
+                      : "#FFFFFF",
                 }}
               >
                 <Stack spacing={3}>
                   <Stack
                     direction="row"
                     spacing={2}
-                    alignItems="center"
+                    sx={{ minWidth: 0, alignItems: "center" }}
                   >
                     <Avatar
                       sx={{
@@ -491,7 +496,7 @@ const Settings = () => {
                       <Security />
                     </Avatar>
 
-                    <Box flex={1}>
+                    <Box flex={1} sx={{ minWidth: 0 }}>
                       <Typography fontWeight="bold">
                         Security
                       </Typography>
@@ -536,7 +541,7 @@ const Settings = () => {
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
 
                   borderRadius: "25px",
 
@@ -550,9 +555,12 @@ const Settings = () => {
                 }}
               >
                 <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={{ xs: 1, sm: 2 }}
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: { xs: "stretch", sm: "center" },
+                  }}
                 >
                   <Box>
                     <Typography
@@ -577,6 +585,7 @@ const Settings = () => {
                     startIcon={<Logout />}
                     onClick={handleLogout}
                     sx={{
+                      width: { xs: "100%", sm: "auto" },
                       borderRadius: "14px",
                       textTransform: "none",
                     }}
@@ -600,6 +609,7 @@ const Settings = () => {
             vertical: "top",
             horizontal: "right",
           }}
+          sx={{ width: { xs: "calc(100% - 32px)", sm: "auto" } }}
         >
           <Alert
             severity="success"

@@ -184,7 +184,7 @@ function Interview() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        p: 3,
+        p: { xs: 1.5, sm: 3 },
       }}
     >
 
@@ -209,8 +209,8 @@ function Interview() {
         <Paper
           elevation={0}
           sx={{
-            p: 5,
-            borderRadius: "35px",
+            p: { xs: 2, sm: 3, md: 5 },
+            borderRadius: { xs: "22px", sm: "35px" },
             background:
               "rgba(17,24,39,0.95)",
             backdropFilter:
@@ -226,16 +226,19 @@ function Interview() {
           <Typography
             variant="h3"
             fontWeight="bold"
-            textAlign="center"
             mb={2}
+            sx={{
+              textAlign: "center",
+              fontSize: { xs: "1.8rem", sm: "2.25rem", md: "3rem" },
+            }}
           >
             AI Mock Interview
           </Typography>
 
           <Typography
-            textAlign="center"
             color="#94A3B8"
             mb={4}
+            sx={{ textAlign: "center" }}
           >
             Practice real interview
             questions with AI feedback
@@ -251,9 +254,14 @@ function Interview() {
 
                 <Stack
                   direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
                   mb={3}
+                  useFlexGap
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 1,
+                  }}
                 >
 
                   <Chip
@@ -282,6 +290,7 @@ function Interview() {
                   variant="h5"
                   mb={4}
                   fontWeight="bold"
+                  sx={{ fontSize: { xs: "1.15rem", sm: "1.5rem" }, overflowWrap: "anywhere" }}
                 >
                   {
                     questions[
@@ -382,6 +391,7 @@ function Interview() {
                       "none",
                     fontWeight: "bold",
                     fontSize: "16px",
+                    width: { xs: "100%", sm: "auto" },
                   }}
                 >
                   Next Question

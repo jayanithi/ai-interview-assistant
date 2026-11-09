@@ -185,7 +185,7 @@ useEffect(() => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          background: '#020617'
+          backgroundColor: 'background.default',
         }}
       >
         <CircularProgress />
@@ -200,9 +200,8 @@ useEffect(() => {
       <Box
         sx={{
           minHeight: '100vh',
-          background:
-            'linear-gradient(135deg, #020617 0%, #0f172a 40%, #111827 100%)',
-          py: 8
+          backgroundColor: 'background.default',
+          py: { xs: 4, sm: 6, md: 8 }
         }}
       >
 
@@ -217,7 +216,7 @@ useEffect(() => {
 
             <Stack
               spacing={3}
-              sx={{ mb: 6 }}
+              sx={{ mb: { xs: 4, md: 6 } }}
             >
 
               <Box>
@@ -237,8 +236,10 @@ useEffect(() => {
                 <Typography
                   variant="h2"
                   sx={{
-                    color: 'white',
-                    fontWeight: 800
+                    color: 'text.primary',
+                    fontWeight: 800,
+                    fontSize: { xs: "2rem", sm: "2.75rem", md: "3.75rem" },
+                    overflowWrap: "anywhere"
                   }}
                 >
                   Analytics Dashboard
@@ -251,22 +252,23 @@ useEffect(() => {
           </motion.div>
 
           {/* STATS */}
-          <Grid container spacing={4} sx={{ mb: 5 }}>
+          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} sx={{ mb: 5 }}>
 
             {stats.map((item, index) => (
 
-              <Grid  xs={12} md={4} key={index}>
+              <Grid size={{ xs: 12, md: 4 }} key={index}>
 
                 <Paper
   elevation={0}
   sx={{
-    p: 4,
+    p: { xs: 2, sm: 3, md: 4 },
     borderRadius: "32px",
-    height: 500,
-    background: "rgba(255,255,255,0.06)",
+    minHeight: { xs: 380, sm: 440, md: 500 },
+    backgroundColor: "background.paper",
     backdropFilter: "blur(16px)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    color: "white"
+    border: "1px solid",
+    borderColor: "divider",
+    color: "text.primary"
   }}
 >
   <Typography
@@ -282,8 +284,8 @@ useEffect(() => {
   <Box
   sx={{
     width: "100%",
-    height: 350,
-    minHeight: 350
+    height: { xs: 260, sm: 310, md: 350 },
+    minHeight: { xs: 260, sm: 310, md: 350 }
   }}
 >
   <ResponsiveContainer
@@ -296,8 +298,8 @@ useEffect(() => {
         data={data}
         dataKey="value"
         nameKey="name"
-        outerRadius={120}
-        innerRadius={60}
+        outerRadius="70%"
+        innerRadius="40%"
         label
       >
         {data.map((entry,index)=>(
@@ -324,23 +326,22 @@ useEffect(() => {
           </Grid>
 
           {/* CHARTS */}
-          <Grid container spacing={4}>
+          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
 
             {/* PIE CHART */}
-            <Grid  xs={12} lg={7}>
+            <Grid size={{ xs: 12, lg: 7 }}>
 
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
                   borderRadius: '32px',
-                  height: 500,
-                  background:
-                    'rgba(255,255,255,0.06)',
+                  height: { xs: 390, sm: 450, md: 500 },
+                  backgroundColor: 'background.paper',
                   backdropFilter: 'blur(16px)',
-                  border:
-                    '1px solid rgba(255,255,255,0.08)',
-                  color: 'white'
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  color: 'text.primary'
                 }}
               >
 
@@ -354,10 +355,8 @@ useEffect(() => {
                   Performance Breakdown
                 </Typography>
 
-                <ResponsiveContainer
-                  width="100%"
-                  height="85%"
-                >
+                <Box sx={{ width: "100%", height: { xs: 300, sm: 350, md: 400 } }}>
+                <ResponsiveContainer width="100%" height="100%">
 
                   <PieChart>
 
@@ -365,8 +364,8 @@ useEffect(() => {
                       data={data}
                       dataKey="value"
                       nameKey="name"
-                      outerRadius={140}
-                      innerRadius={80}
+                      outerRadius="70%"
+                      innerRadius="40%"
                       label
                     >
 
@@ -388,26 +387,26 @@ useEffect(() => {
                   </PieChart>
 
                 </ResponsiveContainer>
+                </Box>
 
               </Paper>
 
             </Grid>
 
             {/* SKILLS */}
-            <Grid  xs={12} lg={5}>
+            <Grid size={{ xs: 12, lg: 5 }}>
 
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
                   borderRadius: '32px',
-                  height: 500,
-                  background:
-                    'rgba(255,255,255,0.06)',
+                  minHeight: { xs: 380, sm: 440, md: 500 },
+                  backgroundColor: 'background.paper',
                   backdropFilter: 'blur(16px)',
-                  border:
-                    '1px solid rgba(255,255,255,0.08)',
-                  color: 'white'
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  color: 'text.primary'
                 }}
               >
 
@@ -429,8 +428,10 @@ useEffect(() => {
 
                       <Stack
                         direction="row"
-                        justifyContent="space-between"
-                        sx={{ mb: 1.5 }}
+                        sx={{
+                          mb: 1.5,
+                          justifyContent: "space-between",
+                        }}
                       >
 
                         <Typography>

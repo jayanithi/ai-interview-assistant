@@ -135,15 +135,12 @@ if (loading) {
         background:
           'radial-gradient(circle at top left,#1e3a8a 0%, #0f172a 40%, #020617 100%)',
         color: 'white',
-        p: {
-          xs: 3,
-          md: 6
-        }
+        p: { xs: 2, sm: 3, md: 6 }
       }}
     >
       {/* Header */}
 
-      <Box mb={8}>
+      <Box mb={{ xs: 4, md: 8 }}>
         <Typography
           variant='h3'
           fontWeight='bold'
@@ -151,7 +148,9 @@ if (loading) {
             background: 'linear-gradient(90deg,#60a5fa,#a855f7)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            mb: 2
+            mb: 2,
+            fontSize: { xs: "1.8rem", sm: "2.25rem", md: "3rem" },
+            overflowWrap: "anywhere"
           }}
         >
           Performance Analytics
@@ -173,9 +172,9 @@ if (loading) {
 
       {/* Analytics Cards */}
 
-      <Grid container spacing={4}>
+      <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
         {analyticsData.map((item, index) => (
-          <Grid item xs={12} md={6} key={index}>
+          <Grid size={{ xs: 12, md: 6 }} key={index}>
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -191,7 +190,7 @@ if (loading) {
               <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
                   borderRadius: '28px',
                   background: 'rgba(255,255,255,0.06)',
                   backdropFilter: 'blur(16px)',
@@ -224,14 +223,16 @@ if (loading) {
 
                 <Stack
                   direction='row'
-                  alignItems='center'
-                  justifyContent='space-between'
                   mb={4}
+                  sx={{
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
                 >
                   <Avatar
                     sx={{
-                      width: 70,
-                      height: 70,
+                      width: { xs: 54, sm: 70 },
+                        height: { xs: 54, sm: 70 },
                       background:
                         'linear-gradient(135deg,#2563eb,#9333ea)',
                       boxShadow:
@@ -245,7 +246,8 @@ if (loading) {
                     variant='h3'
                     fontWeight='bold'
                     sx={{
-                      color: '#60a5fa'
+                      color: '#60a5fa',
+                      fontSize: { xs: "1.75rem", sm: "2.5rem", md: "3rem" }
                     }}
                   >
                     {item.value}%
@@ -299,8 +301,8 @@ if (loading) {
 
       <Box
         sx={{
-          mt: 8,
-          p: 5,
+          mt: { xs: 4, md: 8 },
+          p: { xs: 2.5, sm: 4, md: 5 },
           borderRadius: '30px',
           background: 'rgba(255,255,255,0.05)',
           border: '1px solid rgba(255,255,255,0.08)',
@@ -311,6 +313,7 @@ if (loading) {
           variant='h4'
           fontWeight='bold'
           mb={3}
+          sx={{ fontSize: { xs: "1.5rem", sm: "2rem", md: "2.125rem" } }}
         >
           AI Performance Summary
         </Typography>

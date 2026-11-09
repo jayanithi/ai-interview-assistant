@@ -32,6 +32,7 @@ import {
 } from "react-router-dom";
 
 import axios from "axios";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
 
@@ -140,11 +141,11 @@ const Navbar = () => {
     <AppBar
       position="sticky"
       sx={{
-        background: "#020817",
-        px: 2,
-        backdropFilter: "blur(20px)",
-        borderBottom:
-          "1px solid rgba(255,255,255,0.08)",
+        backgroundColor: "background.paper",
+        color: "text.primary",
+        px: { xs: 1, sm: 2 },
+        borderBottom: 1,
+        borderColor: "divider",
       }}
     >
 
@@ -153,7 +154,9 @@ const Navbar = () => {
           display: "flex",
           justifyContent:
             "space-between",
-          minHeight: "80px",
+          minHeight: { xs: 64, sm: 80 },
+          gap: { xs: 0.5, sm: 2 },
+          px: { xs: 0, sm: 2 },
         }}
       >
 
@@ -164,6 +167,9 @@ const Navbar = () => {
           fontWeight="bold"
           sx={{
             letterSpacing: 1,
+            fontSize: { xs: "1rem", sm: "1.5rem", md: "2.125rem" },
+            whiteSpace: "nowrap",
+            flexShrink: 0,
             background:
               "linear-gradient(135deg,#60A5FA,#A855F7)",
             WebkitBackgroundClip: "text",
@@ -171,15 +177,21 @@ const Navbar = () => {
               "transparent",
           }}
         >
-          AI Interview Assistant
+          AI Interview
+          <Box component="span" sx={{ display: { xs: "none", lg: "inline" } }}>
+            {" "}Assistant
+          </Box>
         </Typography>
 
         {/* NAVIGATION */}
 
         <Box
-          display="flex"
-          alignItems="center"
-          gap={2}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 0, lg: 2 },
+            flexShrink: 0,
+          }}
         >
 
           <Button
@@ -187,8 +199,10 @@ const Navbar = () => {
             component={Link}
             to="/"
             startIcon={<Home />}
+            aria-label="Home"
+            sx={{ minWidth: { xs: 36, lg: 64 }, px: { xs: 0.5, lg: 1.5 } }}
           >
-            Home
+            <Box component="span" sx={{ display: { xs: "none", lg: "inline" } }}>Home</Box>
           </Button>
 
           <Button
@@ -196,8 +210,10 @@ const Navbar = () => {
             component={Link}
             to="/dashboard"
             startIcon={<Dashboard />}
+            aria-label="Dashboard"
+            sx={{ minWidth: { xs: 36, lg: 64 }, px: { xs: 0.5, lg: 1.5 } }}
           >
-            Dashboard
+            <Box component="span" sx={{ display: { xs: "none", lg: "inline" } }}>Dashboard</Box>
           </Button>
 
           <Button
@@ -205,15 +221,25 @@ const Navbar = () => {
             component={Link}
             to="/analytics"
             startIcon={<Analytics />}
+            aria-label="Analytics"
+            sx={{ minWidth: { xs: 36, lg: 64 }, px: { xs: 0.5, lg: 1.5 } }}
           >
-            Analytics
+            <Box component="span" sx={{ display: { xs: "none", lg: "inline" } }}>Analytics</Box>
           </Button>
 
         </Box>
 
         {/* PROFILE */}
 
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 0.5, sm: 1 },
+            flexShrink: 0,
+          }}
+        >
+          <ThemeToggle />
 
           {
 
@@ -235,8 +261,8 @@ const Navbar = () => {
                   <Avatar
                     src={user?.avatar}
                     sx={{
-                      width: 48,
-                      height: 48,
+                      width: { xs: 36, sm: 48 },
+                      height: { xs: 36, sm: 48 },
                       fontWeight: "bold",
                       background:
                         "linear-gradient(135deg,#2563EB,#7C3AED)",
@@ -255,14 +281,15 @@ const Navbar = () => {
                   anchorEl={anchorEl}
                   open={open}
                   onClose={handleClose}
-                  PaperProps={{
-                    sx: {
-                      width: 270,
+                  slotProps={{
+                    paper: {
+                      sx: {
+                      width: { xs: "min(270px, calc(100vw - 32px))", sm: 270 },
                       borderRadius: "20px",
                       mt: 1.5,
-                      background:
-                        "rgba(15,23,42,0.95)",
-                      color: "white",
+                      backgroundColor: "background.paper",
+                      color: "text.primary",
+                      },
                     },
                   }}
                 >
@@ -280,7 +307,8 @@ const Navbar = () => {
                     <Typography
                       variant="body2"
                       sx={{
-                        color: "#94A3B8",
+                        color: "text.secondary",
+                        overflowWrap: "anywhere",
                       }}
                     >
                       {user?.email}
