@@ -10,6 +10,7 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const ThemeContext = createContext();
 
@@ -39,16 +40,37 @@ export const ThemeProviderCustom = ({ children }) => {
             main: "#2563EB",
           },
 
+          secondary: {
+            main: "#7C3AED",
+          },
+
           background: {
             default:
               mode === "dark"
                 ? "#020617"
-                : "#F8FAFC",
+                : "#F1F5F9",
 
             paper:
               mode === "dark"
                 ? "#0F172A"
                 : "#FFFFFF",
+          },
+          text: {
+            primary: mode === "dark" ? "#FFFFFF" : "#0F172A",
+            secondary: mode === "dark" ? "#CBD5E1" : "#475569",
+          },
+          divider:
+            mode === "dark"
+              ? "rgba(255,255,255,0.12)"
+              : "rgba(15,23,42,0.16)",
+        },
+        components: {
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                transition: "background-color 200ms ease, color 200ms ease",
+              },
+            },
           },
         },
       }),
@@ -63,6 +85,7 @@ export const ThemeProviderCustom = ({ children }) => {
       }}
     >
       <ThemeProvider theme={theme}>
+        <CssBaseline enableColorScheme />
         {children}
       </ThemeProvider>
     </ThemeContext.Provider>

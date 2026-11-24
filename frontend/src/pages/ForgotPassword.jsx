@@ -19,6 +19,7 @@ import {
 import {
   useNavigate,
 } from "react-router-dom";
+import ThemeToggle from "../components/ThemeToggle";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -72,37 +73,50 @@ const ForgotPassword = () => {
     <Box
       sx={{
         minHeight: "100vh",
+        width: "100%",
+        position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background:
-          "linear-gradient(to bottom right,#020617,#0f172a,#111827)",
+        p: { xs: 2, sm: 3 },
+        backgroundColor: "background.default",
       }}
     >
+      <Box
+        sx={{
+          position: "absolute",
+          top: { xs: 12, sm: 16 },
+          right: { xs: 12, sm: 16 },
+          zIndex: (theme) => theme.zIndex.tooltip,
+        }}
+      >
+        <ThemeToggle />
+      </Box>
+
       <Paper
         elevation={0}
         sx={{
-          width: 450,
-          p: 5,
-          borderRadius: "30px",
-          background:
-            "rgba(255,255,255,0.05)",
+          width: "100%",
+          maxWidth: 450,
+          p: { xs: 3, sm: 5 },
+          borderRadius: { xs: "22px", sm: "30px" },
+          backgroundColor: "background.paper",
           backdropFilter: "blur(20px)",
-          border:
-            "1px solid rgba(255,255,255,0.08)",
+          border: "1px solid",
+          borderColor: "divider",
         }}
       >
         <Typography
           variant="h4"
           fontWeight="bold"
-          color="white"
+          color="text.primary"
           mb={1}
         >
           Forgot Password
         </Typography>
 
         <Typography
-          color="#94A3B8"
+          color="text.secondary"
           mb={4}
         >
           Enter your email address to receive
@@ -117,27 +131,27 @@ const ForgotPassword = () => {
             onChange={(e) =>
               setEmail(e.target.value)
             }
-            InputProps={{
+            slotProps={{
+              input: {
               startAdornment: (
                 <Phone
                   sx={{
                     mr: 1,
-                    color: "#94A3B8",
+                    color: "text.secondary",
                   }}
                 />
               ),
+              },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
                 borderRadius: "16px",
-                background:
-                  "rgba(255,255,255,0.04)",
-                color: "white",
+                backgroundColor: "background.default",
+                color: "text.primary",
               },
 
               "& fieldset": {
-                borderColor:
-                  "rgba(255,255,255,0.08)",
+                borderColor: "divider",
               },
             }}
           />

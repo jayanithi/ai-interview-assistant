@@ -122,7 +122,7 @@ function Hero() {
 
         color: "white",
 
-        py: 10,
+        py: { xs: 5, sm: 7, md: 10 },
 
         overflow: "hidden",
       }}
@@ -151,6 +151,8 @@ function Hero() {
             label="AI Powered Interview Platform"
             sx={{
               mb: 4,
+                maxWidth: "100%",
+                height: "auto",
               px: 2,
               py: 3,
               bgcolor:
@@ -174,6 +176,8 @@ function Hero() {
               WebkitTextFillColor:
                 "transparent",
               mb: 3,
+              fontSize: { xs: "2rem", sm: "2.75rem", md: "3.75rem" },
+              overflowWrap: "anywhere",
             }}
           >
             AI Interview Assistant
@@ -238,7 +242,7 @@ function Hero() {
                 navigate("/interview")
               }
               sx={{
-                px: 5,
+                px: { xs: 2.5, sm: 4, md: 5 },
                 py: 1.7,
                 borderRadius: "18px",
                 fontWeight: "bold",
@@ -248,6 +252,7 @@ function Hero() {
                 boxShadow:
                   "0px 0px 30px rgba(59,130,246,0.6)",
                 textTransform: "none",
+                width: { xs: "100%", sm: "auto" },
               }}
             >
               Start Practicing
@@ -260,12 +265,13 @@ function Hero() {
                 navigate("/analytics")
               }
               sx={{
-                px: 5,
+                px: { xs: 2.5, sm: 4, md: 5 },
                 py: 1.7,
                 borderRadius: "18px",
                 borderColor: "#475569",
                 color: "white",
                 textTransform: "none",
+                width: { xs: "100%", sm: "auto" },
 
                 "&:hover": {
                   borderColor:
@@ -286,8 +292,9 @@ function Hero() {
           <Stack
             direction="row"
             spacing={3}
-            flexWrap="wrap"
+            useFlexGap
             mb={8}
+            sx={{ flexWrap: "wrap" }}
           >
 
             <Card
@@ -296,7 +303,8 @@ function Hero() {
                   "rgba(255,255,255,0.05)",
                 borderRadius: "24px",
                 color: "white",
-                minWidth: 220,
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { xs: 0, sm: 220 },
               }}
             >
 
@@ -305,7 +313,7 @@ function Hero() {
                 <Stack
                   direction="row"
                   spacing={2}
-                  alignItems="center"
+                  sx={{ alignItems: "center" }}
                 >
 
                   <Users />
@@ -341,7 +349,8 @@ function Hero() {
                   "rgba(255,255,255,0.05)",
                 borderRadius: "24px",
                 color: "white",
-                minWidth: 220,
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { xs: 0, sm: 220 },
               }}
             >
 
@@ -372,7 +381,8 @@ function Hero() {
                   "rgba(255,255,255,0.05)",
                 borderRadius: "24px",
                 color: "white",
-                minWidth: 220,
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { xs: 0, sm: 220 },
               }}
             >
 
@@ -411,10 +421,7 @@ function Hero() {
               (item, index) => (
 
                 <Grid
-                  item
-                  xs={12}
-                  md={6}
-                  lg={4}
+                  size={{ xs: 12, md: 6, lg: 4 }}
                   key={index}
                 >
 
@@ -445,8 +452,7 @@ function Hero() {
 
                         color: "white",
 
-                        minHeight:
-                          "280px",
+                        minHeight: { xs: 0, sm: "280px" },
 
                         transition:
                           "0.4s",
@@ -462,13 +468,13 @@ function Hero() {
                     >
 
                       <CardContent
-                        sx={{ p: 5 }}
+                        sx={{ p: { xs: 2.5, sm: 3.5, md: 5 } }}
                       >
 
                         <Box
                           sx={{
-                            width: 90,
-                            height: 90,
+                            width: { xs: 64, sm: 76, md: 90 },
+                            height: { xs: 64, sm: 76, md: 90 },
                             borderRadius:
                               "24px",
 
@@ -497,6 +503,7 @@ function Hero() {
                           variant="h4"
                           fontWeight="bold"
                           mb={3}
+                          sx={{ fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.125rem" }, overflowWrap: "anywhere" }}
                         >
                           {item.title}
                         </Typography>

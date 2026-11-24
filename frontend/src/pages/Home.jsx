@@ -51,9 +51,12 @@ function Home() {
           minHeight: '100vh',
           position: 'relative',
           overflow: 'hidden',
-          background:
-            'linear-gradient(135deg, #020617 0%, #0f172a 40%, #1e293b 100%)',
-          color: 'white'
+          width: '100%',
+          background: (theme) =>
+            theme.palette.mode === 'dark'
+              ? theme.palette.background.default
+              : 'linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 55%, #F5F3FF 100%)',
+          color: 'text.primary'
         }}
       >
         {/* Background Glow */}
@@ -63,7 +66,10 @@ function Home() {
             width: 400,
             height: 400,
             borderRadius: '50%',
-            background: 'rgba(59,130,246,0.25)',
+            background: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(59,130,246,0.25)'
+                : 'rgba(37,99,235,0.12)',
             filter: 'blur(120px)',
             top: -100,
             right: -100
@@ -76,7 +82,10 @@ function Home() {
             width: 300,
             height: 300,
             borderRadius: '50%',
-            background: 'rgba(168,85,247,0.25)',
+            background: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(168,85,247,0.25)'
+                : 'rgba(124,58,237,0.10)',
             filter: 'blur(100px)',
             bottom: -80,
             left: -80
@@ -86,15 +95,15 @@ function Home() {
         <Container maxWidth="xl">
           <Grid
             container
-            spacing={6}
-            alignItems="center"
+            spacing={{ xs: 4, md: 6 }}
             sx={{
+              alignItems: 'center',
               minHeight: '100vh',
-              py: 10
+              py: { xs: 6, sm: 8, md: 10 }
             }}
           >
             {/* Left Content */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <motion.div
                 initial={{ opacity: 0, y: 80 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -107,10 +116,11 @@ function Home() {
                     mb: 3,
                     px: 1,
                     py: 2.5,
-                    color: '#fff',
-                    background: 'rgba(255,255,255,0.08)',
+                    color: 'text.primary',
+                    backgroundColor: 'background.paper',
                     backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.1)'
+                    border: '1px solid',
+                    borderColor: 'divider'
                   }}
                 />
 
@@ -121,7 +131,8 @@ function Home() {
                     lineHeight: 1.1,
                     mb: 3,
                     fontSize: {
-                      xs: '3rem',
+                      xs: '2.5rem',
+                      sm: '3.5rem',
                       md: '5rem'
                     }
                   }}
@@ -130,8 +141,10 @@ function Home() {
                   <Box
                     component="span"
                     sx={{
-                      background:
-                        'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+                      background: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'linear-gradient(90deg, #3b82f6, #8b5cf6)'
+                          : 'linear-gradient(90deg, #1d4ed8, #6d28d9)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent'
                     }}
@@ -144,7 +157,7 @@ function Home() {
                 <Typography
                   variant="h6"
                   sx={{
-                    color: 'rgba(255,255,255,0.7)',
+                    color: 'text.secondary',
                     maxWidth: 600,
                     mb: 4,
                     lineHeight: 1.8
@@ -155,7 +168,11 @@ function Home() {
                   analytics built for modern professionals.
                 </Typography>
 
-                <Stack direction="row" spacing={3}>
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={{ xs: 1.5, sm: 2 }}
+                  sx={{ width: { xs: '100%', sm: 'auto' } }}
+                >
                  <Button
   variant="contained"
   size="large"
@@ -169,14 +186,16 @@ function Home() {
     }
   }}
   sx={{
-    px: 5,
+    px: { xs: 2.5, sm: 4, md: 5 },
     py: 1.8,
     borderRadius: '16px',
     textTransform: 'none',
     fontSize: '1rem',
     fontWeight: 700,
-    background:
-      'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+    background: (theme) =>
+      theme.palette.mode === 'dark'
+        ? 'linear-gradient(90deg, #3b82f6, #8b5cf6)'
+        : 'linear-gradient(90deg, #1d4ed8, #6d28d9)',
     boxShadow:
       '0 10px 30px rgba(59,130,246,0.4)',
     '&:hover': {
@@ -184,7 +203,8 @@ function Home() {
       boxShadow:
         '0 14px 40px rgba(59,130,246,0.6)'
     },
-    transition: '0.3s'
+    transition: '0.3s',
+    width: { xs: '100%', sm: 'auto' }
   }}
 >
   Start Practicing
@@ -194,16 +214,17 @@ function Home() {
                     variant="outlined"
                     size="large"
                     sx={{
-                      px: 5,
+                      px: { xs: 2.5, sm: 4, md: 5 },
                       py: 1.8,
                       borderRadius: '16px',
                       textTransform: 'none',
-                      color: 'white',
-                      borderColor: 'rgba(255,255,255,0.2)',
+                      color: 'text.primary',
+                      borderColor: 'divider',
                       '&:hover': {
-                        borderColor: '#fff',
-                        background: 'rgba(255,255,255,0.05)'
-                      }
+                        borderColor: 'text.primary',
+                        backgroundColor: 'action.hover'
+                      },
+                      width: { xs: '100%', sm: 'auto' }
                     }}
                   >
                     Learn More
@@ -213,10 +234,10 @@ function Home() {
             </Grid>
 
             {/* Right Side Cards */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid container spacing={3}>
                 {features.map((feature, index) => (
-                  <Grid item xs={12} sm={6} md={12} key={index}>
+                  <Grid size={{ xs: 12, sm: 6, md: 12 }} key={index}>
                     <motion.div
                       initial={{ opacity: 0, x: 80 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -227,21 +248,25 @@ function Home() {
                     >
                       <Card
                         sx={{
-                          background: 'rgba(255,255,255,0.08)',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          backgroundColor: 'background.paper',
+                          border: '1px solid',
+                          borderColor: 'divider',
                           backdropFilter: 'blur(14px)',
                           borderRadius: '24px',
-                          color: 'white',
+                          color: 'text.primary',
                           transition: '0.4s',
                           '&:hover': {
                             transform: 'translateY(-10px)',
-                            borderColor: '#3b82f6',
+                            borderColor: (theme) =>
+                              theme.palette.mode === 'dark'
+                                ? '#3b82f6'
+                                : '#1d4ed8',
                             boxShadow:
                               '0 20px 40px rgba(59,130,246,0.25)'
                           }
                         }}
                       >
-                        <CardContent sx={{ p: 4 }}>
+                        <CardContent sx={{ p: { xs: 2.5, sm: 3, md: 4 } }}>
                           <Box
                             sx={{
                               width: 70,
@@ -250,8 +275,9 @@ function Home() {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
+                              color: '#FFFFFF',
                               background:
-                                'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                                'linear-gradient(135deg, #2563eb, #7c3aed)',
                               mb: 3
                             }}
                           >
@@ -270,7 +296,7 @@ function Home() {
 
                           <Typography
                             sx={{
-                              color: 'rgba(255,255,255,0.7)',
+                              color: 'text.secondary',
                               lineHeight: 1.8
                             }}
                           >

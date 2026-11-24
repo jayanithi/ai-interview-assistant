@@ -22,6 +22,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import InfoIcon from "@mui/icons-material/Info";
 
 import axios from "axios";
+import ThemeToggle from "./ThemeToggle";
 
 
 // ============================================
@@ -45,13 +46,13 @@ export const LoadingScreen = ({
     <Box
       sx={{
         minHeight: "100vh",
+        position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
         gap: 3,
-        background:
-          "linear-gradient(to bottom right,#020617,#0f172a)",
+        backgroundColor: "background.default",
       }}
     >
 
@@ -61,7 +62,7 @@ export const LoadingScreen = ({
         variant="h5"
         sx={{
           fontWeight: "bold",
-          color: "white",
+          color: "text.primary",
         }}
       >
         {text}
@@ -86,13 +87,14 @@ export const CustomCard = ({
     <Paper
       elevation={0}
       sx={{
-        p: padding,
+        p: { xs: 2, sm: padding },
         borderRadius: "24px",
-        background: "#0f172a",
-        border: "1px solid #1e293b",
+        backgroundColor: "background.paper",
+        border: "1px solid",
+        borderColor: "divider",
         backdropFilter: "blur(12px)",
         transition: "0.3s",
-        color: "white",
+        color: "text.primary",
 
         "&:hover": {
           transform: "translateY(-5px)",
@@ -122,14 +124,15 @@ export const SectionTitle = ({
       <Typography
         variant="h3"
         fontWeight="bold"
-        color="white"
+        color="text.primary"
+        sx={{ fontSize: { xs: "1.75rem", sm: "2.25rem", md: "3rem" }, overflowWrap: "anywhere" }}
       >
         {title}
       </Typography>
 
       <Typography
         sx={{
-          color: "#94a3b8",
+          color: "text.secondary",
           mt: 1,
         }}
       >
@@ -309,7 +312,7 @@ export const UserProfileCard = () => {
       <Stack
         direction="row"
         spacing={3}
-        alignItems="center"
+        sx={{ minWidth: 0, alignItems: "center" }}
       >
 
         <Avatar
@@ -325,17 +328,19 @@ export const UserProfileCard = () => {
           }
         </Avatar>
 
-        <Box>
+        <Box sx={{ minWidth: 0 }}>
 
           <Typography
             variant="h6"
             fontWeight="bold"
+              sx={{ overflowWrap: "anywhere", fontSize: { xs: "1rem", sm: "1.25rem" } }}
           >
             {user?.name}
           </Typography>
 
           <Typography
-            color="#94a3b8"
+            color="text.secondary"
+            sx={{ overflowWrap: "anywhere", fontSize: { xs: "0.8rem", sm: "1rem" } }}
           >
             {user?.email}
           </Typography>
@@ -378,7 +383,7 @@ export const EmptyState = ({
 
         <Typography
           sx={{
-            color: "#94a3b8",
+            color: "text.secondary",
             mt: 2,
           }}
         >
@@ -446,14 +451,16 @@ export const StatsCard = ({
 
       <Stack
         direction="row"
-        justifyContent="space-between"
-        alignItems="center"
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
 
         <Box>
 
           <Typography
-            color="#94a3b8"
+            color="text.secondary"
           >
             {title}
           </Typography>
@@ -470,7 +477,7 @@ export const StatsCard = ({
 
         <Box
           sx={{
-            background: "#1e293b",
+            backgroundColor: "action.hover",
             p: 2,
             borderRadius: "16px",
           }}
@@ -501,7 +508,7 @@ export const DividerTitle = ({
 
         <Typography
           sx={{
-            color: "#94a3b8",
+            color: "text.secondary",
             px: 2,
           }}
         >
@@ -526,11 +533,13 @@ const Common = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(to bottom right,#020617,#0f172a)",
-        p: 5,
+        backgroundColor: "background.default",
+        p: { xs: 2, sm: 3, md: 5 },
       }}
     >
+      <Box sx={{ position: "absolute", top: 16, right: 16 }}>
+        <ThemeToggle />
+      </Box>
 
       <SectionTitle
         title="Common Components"

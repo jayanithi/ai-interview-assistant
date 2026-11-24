@@ -128,12 +128,11 @@ const Profile = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          background:
-            "linear-gradient(to bottom right,#020617,#0f172a,#111827)",
+          backgroundColor: "background.default",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          p: 4,
+          p: { xs: 2, sm: 3, md: 4 },
         }}
       >
         <Paper
@@ -141,15 +140,19 @@ const Profile = () => {
           sx={{
             width: "100%",
             maxWidth: "1100px",
-            borderRadius: "35px",
+            borderRadius: { xs: "22px", sm: "35px" },
             overflow: "hidden",
-            background:
-              "rgba(255,255,255,0.05)",
+            backgroundColor: "background.paper",
             backdropFilter: "blur(20px)",
-            border:
-              "1px solid rgba(255,255,255,0.08)",
-            boxShadow:
-              "0px 25px 80px rgba(0,0,0,0.45)",
+            border: "1px solid",
+            borderColor: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255,255,255,0.25)"
+                : theme.palette.divider,
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0px 25px 80px rgba(0,0,0,0.45)"
+                : "0px 25px 60px rgba(15,23,42,0.12)",
           }}
         >
           <Stack
@@ -165,10 +168,9 @@ const Profile = () => {
                   xs: "100%",
                   md: "38%",
                 },
-                background:
-                  "linear-gradient(180deg,#1E3A8A,#2563EB,#1D4ED8)",
-                p: 5,
-                color: "white",
+                backgroundColor: "background.default",
+                p: { xs: 3, sm: 4, md: 5 },
+                color: "text.primary",
                 position: "relative",
               }}
             >
@@ -179,15 +181,17 @@ const Profile = () => {
                   width: 250,
                   height: 250,
                   borderRadius: "50%",
-                  background:
-                    "rgba(255,255,255,0.12)",
+                  background: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(255,255,255,0.12)"
+                      : "rgba(37,99,235,0.10)",
                   top: -80,
                   right: -80,
                 }}
               />
 
               {/* PROFILE IMAGE */}
-              <Box textAlign="center">
+              <Box sx={{ textAlign: "center" }}>
                 <Box
                   sx={{
                     position: "relative",
@@ -198,11 +202,11 @@ const Profile = () => {
                   <Avatar
                     src={preview}
                     sx={{
-                      width: 150,
-                      height: 150,
+                      width: { xs: 112, sm: 150 },
+                      height: { xs: 112, sm: 150 },
                       margin: "auto",
-                      border:
-                        "5px solid rgba(255,255,255,0.25)",
+                      border: "5px solid",
+                      borderColor: "divider",
                       boxShadow:
                         "0px 15px 40px rgba(0,0,0,0.35)",
                       fontSize: "55px",
@@ -219,9 +223,10 @@ const Profile = () => {
                       position: "absolute",
                       bottom: 5,
                       right: 5,
-                      bgcolor: "white",
+                      bgcolor: "background.paper",
+                      color: "primary.main",
                       "&:hover": {
-                        bgcolor: "#e2e8f0",
+                        bgcolor: "action.hover",
                       },
                     }}
                   >
@@ -241,6 +246,7 @@ const Profile = () => {
                   variant="h4"
                   fontWeight="bold"
                   mt={3}
+                  sx={{ overflowWrap: "anywhere", fontSize: { xs: "1.5rem", sm: "2.125rem" } }}
                 >
                   {name}
                 </Typography>
@@ -250,6 +256,7 @@ const Profile = () => {
                   sx={{
                     opacity: 0.85,
                     mt: 1,
+                    overflowWrap: "anywhere",
                   }}
                 >
                   {email}
@@ -259,17 +266,18 @@ const Profile = () => {
                 <Stack
                   direction="row"
                   spacing={1}
-                  justifyContent="center"
                   mt={3}
-                  flexWrap="wrap"
+                  sx={{
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
                 >
                   <Chip
                     icon={<Verified />}
                     label="Verified"
                     sx={{
-                      bgcolor:
-                        "rgba(255,255,255,0.18)",
-                      color: "white",
+                      bgcolor: "action.hover",
+                      color: "text.primary",
                     }}
                   />
 
@@ -277,9 +285,8 @@ const Profile = () => {
                     icon={<WorkspacePremium />}
                     label="Premium"
                     sx={{
-                      bgcolor:
-                        "rgba(255,255,255,0.18)",
-                      color: "white",
+                      bgcolor: "action.hover",
+                      color: "text.primary",
                     }}
                   />
                 </Stack>
@@ -292,8 +299,7 @@ const Profile = () => {
                   sx={{
                     p: 3,
                     borderRadius: "25px",
-                    bgcolor:
-                      "rgba(255,255,255,0.12)",
+                    bgcolor: "action.hover",
                     backdropFilter: "blur(10px)",
                   }}
                 >
@@ -320,8 +326,10 @@ const Profile = () => {
 
                     <Divider
                       sx={{
-                        borderColor:
-                          "rgba(255,255,255,0.2)",
+                        borderColor: (theme) =>
+                          theme.palette.mode === "dark"
+                            ? "rgba(255,255,255,0.2)"
+                            : theme.palette.divider,
                       }}
                     />
 
@@ -340,8 +348,10 @@ const Profile = () => {
 
                     <Divider
                       sx={{
-                        borderColor:
-                          "rgba(255,255,255,0.2)",
+                        borderColor: (theme) =>
+                          theme.palette.mode === "dark"
+                            ? "rgba(255,255,255,0.2)"
+                            : theme.palette.divider,
                       }}
                     />
 
@@ -366,10 +376,7 @@ const Profile = () => {
             <Box
               sx={{
                 flex: 1,
-                p: {
-                  xs: 4,
-                  md: 6,
-                },
+                p: { xs: 3, sm: 4, md: 6 },
               }}
             >
               {/* HEADER */}
@@ -378,7 +385,8 @@ const Profile = () => {
                   variant="h3"
                   fontWeight="bold"
                   sx={{
-                    color: "white",
+                    color: "text.primary",
+                    fontSize: { xs: "1.75rem", sm: "2.25rem", md: "3rem" },
                   }}
                 >
                   Profile Settings
@@ -386,7 +394,7 @@ const Profile = () => {
 
                 <Typography
                   sx={{
-                    color: "#94A3B8",
+                    color: "text.secondary",
                     mt: 1,
                   }}
                 >
@@ -399,7 +407,7 @@ const Profile = () => {
                 {/* NAME */}
                 <Box>
                   <Typography
-                    color="#CBD5E1"
+                    color="text.secondary"
                     mb={1}
                     fontWeight="bold"
                   >
@@ -413,27 +421,27 @@ const Profile = () => {
                       setName(e.target.value)
                     }
                     placeholder="Enter your full name"
-                    InputProps={{
+                    slotProps={{
+                      input: {
                       startAdornment: (
                         <Person
                           sx={{
                             mr: 1,
-                            color: "#94A3B8",
+                            color: "text.secondary",
                           }}
                         />
                       ),
+                      },
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "18px",
-                        background:
-                          "rgba(255,255,255,0.04)",
-                        color: "white",
+                        backgroundColor: "background.default",
+                        color: "text.primary",
                       },
 
                       "& fieldset": {
-                        borderColor:
-                          "rgba(255,255,255,0.08)",
+                        borderColor: "divider",
                       },
                     }}
                   />
@@ -442,7 +450,7 @@ const Profile = () => {
                 {/* EMAIL */}
                 <Box>
                   <Typography
-                    color="#CBD5E1"
+                    color="text.secondary"
                     mb={1}
                     fontWeight="bold"
                   >
@@ -456,27 +464,27 @@ const Profile = () => {
                       setEmail(e.target.value)
                     }
                     placeholder="Enter your email"
-                    InputProps={{
+                    slotProps={{
+                      input: {
                       startAdornment: (
                         <Email
                           sx={{
                             mr: 1,
-                            color: "#94A3B8",
+                            color: "text.secondary",
                           }}
                         />
                       ),
+                      },
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "18px",
-                        background:
-                          "rgba(255,255,255,0.04)",
-                        color: "white",
+                        backgroundColor: "background.default",
+                        color: "text.primary",
                       },
 
                       "& fieldset": {
-                        borderColor:
-                          "rgba(255,255,255,0.08)",
+                        borderColor: "divider",
                       },
                     }}
                   />
@@ -486,18 +494,17 @@ const Profile = () => {
                 <Paper
                   elevation={0}
                   sx={{
-                    p: 4,
+                    p: { xs: 2, sm: 3, md: 4 },
                     borderRadius: "25px",
-                    background:
-                      "rgba(255,255,255,0.03)",
-                    border:
-                      "1px solid rgba(255,255,255,0.06)",
+                    backgroundColor: "background.default",
+                    border: "1px solid",
+                    borderColor: "divider",
                   }}
                 >
                   <Typography
                     variant="h6"
                     fontWeight="bold"
-                    color="white"
+                    color="text.primary"
                     mb={3}
                   >
                     Account Information
@@ -506,14 +513,14 @@ const Profile = () => {
                   <Stack spacing={3}>
                     <Box>
                       <Typography
-                        color="#94A3B8"
+                        color="text.secondary"
                         variant="body2"
                       >
                         Account Type
                       </Typography>
 
                       <Typography
-                        color="white"
+                        color="text.primary"
                         fontWeight="bold"
                       >
                         Premium User
@@ -522,21 +529,20 @@ const Profile = () => {
 
                     <Divider
                       sx={{
-                        borderColor:
-                          "rgba(255,255,255,0.08)",
+                        borderColor: "divider",
                       }}
                     />
 
                     <Box>
                       <Typography
-                        color="#94A3B8"
+                        color="text.secondary"
                         variant="body2"
                       >
                         Member Since
                       </Typography>
 
                       <Typography
-                        color="white"
+                        color="text.primary"
                         fontWeight="bold"
                       >
                         July 2025
@@ -586,6 +592,7 @@ const Profile = () => {
             vertical: "top",
             horizontal: "right",
           }}
+          sx={{ width: { xs: "calc(100% - 32px)", sm: "auto" } }}
         >
           <Alert
             severity="success"

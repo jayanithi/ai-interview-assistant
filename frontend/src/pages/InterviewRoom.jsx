@@ -289,11 +289,10 @@ const stopSpeechRecognition = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background:
-            'linear-gradient(135deg, #020617 0%, #0f172a 40%, #111827 100%)',
+          backgroundColor: 'background.default',
           position: 'relative',
           overflow: 'hidden',
-          py: 8
+          py: { xs: 3, sm: 5, md: 8 }
         }}
       >
         {/* Glow Effects */}
@@ -337,21 +336,24 @@ const stopSpeechRecognition = () => {
             <Paper
               elevation={0}
               sx={{
-                p: 4,
+                p: { xs: 2, sm: 3, md: 4 },
                 mb: 4,
                 borderRadius: '28px',
-                background: 'rgba(255,255,255,0.06)',
+                backgroundColor: 'background.paper',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'white'
+                border: '1px solid',
+                borderColor: 'divider',
+                color: 'text.primary'
               }}
             >
 
               <Stack
                 direction={{ xs: 'column', md: 'row' }}
-                justifyContent="space-between"
-                alignItems={{ xs: 'flex-start', md: 'center' }}
                 spacing={3}
+                sx={{
+                  justifyContent: "space-between",
+                  alignItems: { xs: "flex-start", md: "center" },
+                }}
               >
 
                 <Box>
@@ -372,7 +374,8 @@ const stopSpeechRecognition = () => {
                     variant="h3"
                     sx={{
                       fontWeight: 800,
-                      mb: 1
+                      mb: 1,
+                      fontSize: { xs: "1.8rem", sm: "2.25rem", md: "3rem" }
                     }}
                   >
                     Interview Room
@@ -387,13 +390,13 @@ const stopSpeechRecognition = () => {
                   </Typography>
 
                 </Box>
-<Box sx={{ mt: 3 }}>
+<Box sx={{ mt: { xs: 2, md: 3 }, minWidth: 0 }}>
 
   <Typography sx={{ mb: 2 }}>
     Select Interview Role
   </Typography>
 
-  <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
+  <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: "wrap" }}>
 
     <Button disabled={interviewStarted}
   variant={role === "frontend" ? "contained" : "outlined"}
@@ -455,15 +458,15 @@ disabled={interviewStarted}
   </Stack>
 
 </Box>
-                <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={{ xs: 1, sm: 2 }} useFlexGap sx={{ flexWrap: "wrap" }}>
 
                   <Paper
                     sx={{
-                      px: 3,
+                      px: { xs: 2, sm: 3 },
                       py: 2,
                       borderRadius: '20px',
-                      background: 'rgba(255,255,255,0.08)',
-                      color: 'white'
+                      backgroundColor: 'background.default',
+                      color: 'text.primary'
                     }}
                   >
                     <Stack direction="row" spacing={1}>
@@ -488,11 +491,11 @@ disabled={interviewStarted}
 
                   <Paper
                     sx={{
-                      px: 3,
+                      px: { xs: 2, sm: 3 },
                       py: 2,
                       borderRadius: '20px',
-                      background: 'rgba(255,255,255,0.08)',
-                      color: 'white'
+                      backgroundColor: 'background.default',
+                      color: 'text.primary'
                     }}
                   >
                     <Stack direction="row" spacing={1}>
@@ -514,28 +517,32 @@ disabled={interviewStarted}
             <Paper
               elevation={0}
               sx={{
-                p: 5,
+                p: { xs: 2, sm: 3, md: 5 },
                 borderRadius: '32px',
-                background: 'rgba(255,255,255,0.06)',
+                backgroundColor: 'background.paper',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'white'
+                border: '1px solid',
+                borderColor: 'divider',
+                color: 'text.primary'
               }}
             >
 
               {/* AI INTERVIEWER */}
 
               <Stack
-                direction="row"
+                direction={{ xs: "column", sm: "row" }}
                 spacing={2}
-                alignItems="center"
-                sx={{ mb: 4 }}
+                sx={{
+                  mb: 4,
+                  minWidth: 0,
+                  alignItems: { xs: "flex-start", sm: "center" },
+                }}
               >
 
                 <Avatar
                   sx={{
-                    width: 65,
-                    height: 65,
+                    width: { xs: 52, sm: 65 },
+                    height: { xs: 52, sm: 65 },
                     background:
                       'linear-gradient(135deg, #3b82f6, #8b5cf6)'
                   }}
@@ -556,7 +563,7 @@ disabled={interviewStarted}
 
                   <Typography
                     sx={{
-                      color: 'rgba(255,255,255,0.6)'
+                      color: 'text.secondary'
                     }}
                   >
                     Senior Recruiter
@@ -571,9 +578,13 @@ disabled={interviewStarted}
               <Box sx={{ mb: 4 }}>
 
                 <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  sx={{ mb: 1 }}
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={{ xs: 0.5, sm: 1 }}
+                  sx={{
+                    mb: 1,
+                    justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                  }}
                 >
 
                   <Typography>
@@ -608,8 +619,7 @@ disabled={interviewStarted}
                   sx={{
                     height: 10,
                     borderRadius: 10,
-                    background:
-                      'rgba(255,255,255,0.08)',
+                    backgroundColor: 'action.hover',
                     '& .MuiLinearProgress-bar': {
                       borderRadius: 10,
                       background:
@@ -624,14 +634,13 @@ disabled={interviewStarted}
 
               <Paper
                 sx={{
-                  p: 4,
+                  p: { xs: 2, sm: 3, md: 4 },
                   mb: 4,
                   borderRadius: '24px',
-                  background:
-                    'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(168,85,247,0.12))',
-                  border:
-                    '1px solid rgba(255,255,255,0.08)',
-                  color: 'white'
+                  backgroundColor: 'action.hover',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  color: 'text.primary'
                 }}
               >
 
@@ -639,7 +648,7 @@ disabled={interviewStarted}
   Question {currentIndex + 1} of {questions.length}
 </Typography>
 
-<Typography>
+<Typography sx={{ mt: 1.5, overflowWrap: "anywhere", lineHeight: 1.7 }}>
   {questions.length > 0
     ? questions[currentIndex]
     : "Loading..."}
@@ -663,18 +672,16 @@ disabled={interviewStarted}
                   mb: 4,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '24px',
-                    background:
-                      'rgba(255,255,255,0.05)',
-                    color: 'white',
+                    backgroundColor: 'background.default',
+                    color: 'text.primary',
 
                     '& fieldset': {
-                      borderColor:
-                        'rgba(255,255,255,0.08)'
+                      borderColor: 'divider'
                     }
                   },
 
                   '& textarea': {
-                    color: 'white'
+                    color: 'text.primary'
                   }
                 }}
               />
@@ -682,8 +689,8 @@ disabled={interviewStarted}
               {/* BUTTONS */}
 
              <Stack
-  direction={{ xs: "column", sm: "row" }}
-  spacing={3}
+  direction={{ xs: "column", md: "row" }}
+  spacing={{ xs: 1.5, md: 2 }}
 >
 
   <Button
@@ -746,13 +753,12 @@ disabled={interviewStarted}
                   <Paper
                     sx={{
                       mt: 5,
-                      p: 4,
+                      p: { xs: 2, sm: 3, md: 4 },
                       borderRadius: '24px',
-                      background:
-                        'rgba(255,255,255,0.05)',
-                      color: 'white',
-                      border:
-                        '1px solid rgba(255,255,255,0.08)'
+                      backgroundColor: 'background.paper',
+                      color: 'text.primary',
+                      border: '1px solid',
+                      borderColor: 'divider'
                     }}
                   >
 
@@ -769,8 +775,7 @@ disabled={interviewStarted}
                     <Typography
                       sx={{
                         mb: 2,
-                        color:
-                          'rgba(255,255,255,0.7)'
+                        color: 'text.secondary'
                       }}
                     >
                       {feedback}
