@@ -1,11 +1,13 @@
+
 import requests
 
 def generate_content(prompt):
 
     try:
+        print("OLLAMA: Connecting to server...")
 
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            "http://127.0.0.1:11434/api/generate",
             json={
                 "model": "llama3",
                 "prompt": prompt,
@@ -14,21 +16,24 @@ def generate_content(prompt):
             timeout=300
         )
 
-        print(response.status_code)
+        print("OLLAMA STATUS:", response.status_code)
 
-        if response.status_code != 200:
-            print(response.text)
-            return ""
+        response.raise_for_status()
 
         data = response.json()
 
-        return data.get(
-            "response",
-            ""
-        )
+        print("OLLAMA: Response received successfully!")
+
+        return data.get("response", "")
+
+    except requests.exceptions.ConnectionError as e:
+        print("OLLAMA CONNECTION ERROR:", e)
+        return ""
+
+    except requests.exceptions.Timeout:
+        print("OLLAMA TIMEOUT ERROR")
+        return ""
 
     except Exception as e:
-
         print("OLLAMA ERROR:", e)
-
         return ""

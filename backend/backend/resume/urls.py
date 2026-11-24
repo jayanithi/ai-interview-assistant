@@ -6,17 +6,6 @@ from .views import (
 )
 
 urlpatterns = [
-
-    path(
-        "upload/",
-        ResumeUploadView.as_view(),
-        name="resume-upload"
-    ),
-
-    path(
-        "analytics/",
-        ResumeAnalyticsView.as_view(),
-        name="resume-analytics"
-    ),
-
+    path("upload/", ResumeUploadView.as_view(), name="resume-upload"),
+    path("analytics/", ResumeAnalyticsView.as_view(), name="resume-analytics"),
 ]

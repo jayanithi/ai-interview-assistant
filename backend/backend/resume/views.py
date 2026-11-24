@@ -1,12 +1,13 @@
+
 # =========================================================
 # resume/views.py
 # =========================================================
 
 import os
-import fitz
-
+import threading
 from datetime import datetime
 
+import fitz
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
@@ -18,8 +19,6 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from pymongo import MongoClient
 
 from resume.ai_resume_analyzer import analyze_resume
-from database.mongo import resume_collection
-
 
 
 # =========================================================
@@ -27,12 +26,63 @@ from database.mongo import resume_collection
 # =========================================================
 
 client = MongoClient(
-    "mongodb://localhost:27017/"
+    "mongodb://localhost:27017/",
+    serverSelectionTimeoutMS=5000
 )
 
 db = client["interview_ai"]
-
 resume_collection = db["resumes"]
+
+
+# =========================================================
+# BACKGROUND AI ANALYSIS
+# =========================================================
+
+def run_background_analysis(resume_id, resume_text):
+
+    try:
+        print("RESUME AI: Analysis started")
+
+        ai_result = analyze_resume(resume_text)
+
+        if ai_result and str(ai_result).strip():
+
+            status = "completed"
+
+        else:
+
+            status = "fallback"
+            ai_result = "AI analysis could not generate a response."
+
+        # FIX: resume_collection (not resumes_collection)
+        result = resume_collection.update_one(
+            {"_id": resume_id},
+            {
+                "$set": {
+                    "ai_analysis": str(ai_result),
+                    "ai_status": status,
+                    "ai_completed_at": datetime.utcnow()
+                }
+            }
+        )
+
+        print("RESUME AI STATUS:", status)
+        print("MONGO MATCHED:", result.matched_count)
+        print("MONGO MODIFIED:", result.modified_count)
+
+    except Exception as e:
+
+        print("RESUME AI ERROR:", str(e))
+
+        resume_collection.update_one(
+            {"_id": resume_id},
+            {
+                "$set": {
+                    "ai_status": "failed",
+                    "ai_analysis": "Analysis failed: " + str(e)
+                }
+            }
+        )
 
 
 # =========================================================
@@ -52,9 +102,7 @@ class ResumeUploadView(APIView):
 
         try:
 
-            uploaded_file = request.FILES.get(
-                "file"
-            )
+            uploaded_file = request.FILES.get("file")
 
             if not uploaded_file:
                 return Response({
@@ -62,9 +110,7 @@ class ResumeUploadView(APIView):
                     "message": "No File Uploaded"
                 }, status=400)
 
-            if not uploaded_file.name.lower().endswith(
-                ".pdf"
-            ):
+            if not uploaded_file.name.lower().endswith(".pdf"):
                 return Response({
                     "success": False,
                     "message": "Only PDF files allowed"
@@ -79,13 +125,16 @@ class ResumeUploadView(APIView):
                 "resumes"
             )
 
-            os.makedirs(
-                resume_dir,
-                exist_ok=True
-            )
+            os.makedirs(resume_dir, exist_ok=True)
+
+            media_url = settings.MEDIA_URL or "/media/"
+
+            if not media_url.endswith("/"):
+                media_url += "/"
 
             fs = FileSystemStorage(
-                location=resume_dir
+                location=resume_dir,
+                base_url=f"{media_url}resumes/"
             )
 
             filename = fs.save(
@@ -93,41 +142,37 @@ class ResumeUploadView(APIView):
                 uploaded_file
             )
 
-            file_path = fs.path(
-                filename
-            )
+            file_path = fs.path(filename)
 
-            file_url = (
-                request.build_absolute_uri(
-                    settings.MEDIA_URL
-                )
-                + "resumes/"
-                + filename
+            file_url = request.build_absolute_uri(
+                fs.url(filename)
             )
 
             # =================================================
             # EXTRACT PDF TEXT
             # =================================================
 
-            pdf = fitz.open(
-                file_path
-            )
+            with fitz.open(file_path) as pdf:
 
-            resume_text = ""
+                resume_text = "".join(
+                    page.get_text() for page in pdf
+                ).strip()
 
-            for page in pdf:
-                resume_text += page.get_text()
+            if not resume_text:
 
-            pdf.close()
-
-            resume_text = resume_text.strip()
+                return Response({
+                    "success": False,
+                    "message": (
+                        "No readable text found in this PDF. "
+                        "Please upload a text-based PDF resume."
+                    )
+                }, status=400)
 
             # =================================================
             # SKILLS
             # =================================================
 
             skill_keywords = [
-
                 "Python",
                 "Java",
                 "JavaScript",
@@ -157,26 +202,18 @@ class ResumeUploadView(APIView):
                 "C++"
             ]
 
-            extracted_skills = []
+            resume_text_lower = resume_text.lower()
 
-            for skill in skill_keywords:
-
-                if skill.lower() in resume_text.lower():
-
-                    extracted_skills.append(
-                        skill
-                    )
-
-            extracted_skills = list(
-                set(extracted_skills)
-            )
+            extracted_skills = list(dict.fromkeys(
+                skill for skill in skill_keywords
+                if skill.lower() in resume_text_lower
+            ))
 
             # =================================================
             # EXPERIENCE
             # =================================================
 
             experience_keywords = [
-
                 "Intern",
                 "Internship",
                 "Developer",
@@ -189,26 +226,16 @@ class ResumeUploadView(APIView):
                 "Freelancer"
             ]
 
-            extracted_experience = []
-
-            for item in experience_keywords:
-
-                if item.lower() in resume_text.lower():
-
-                    extracted_experience.append(
-                        item
-                    )
-
-            extracted_experience = list(
-                set(extracted_experience)
-            )
+            extracted_experience = list(dict.fromkeys(
+                item for item in experience_keywords
+                if item.lower() in resume_text_lower
+            ))
 
             # =================================================
             # EDUCATION
             # =================================================
 
             education_keywords = [
-
                 "B.E",
                 "B.Tech",
                 "M.E",
@@ -222,26 +249,16 @@ class ResumeUploadView(APIView):
                 "CGPA"
             ]
 
-            extracted_education = []
-
-            for item in education_keywords:
-
-                if item.lower() in resume_text.lower():
-
-                    extracted_education.append(
-                        item
-                    )
-
-            extracted_education = list(
-                set(extracted_education)
-            )
+            extracted_education = list(dict.fromkeys(
+                item for item in education_keywords
+                if item.lower() in resume_text_lower
+            ))
 
             # =================================================
             # REQUIRED SKILLS
             # =================================================
 
             required_skills = [
-
                 "Python",
                 "React",
                 "MongoDB",
@@ -253,13 +270,13 @@ class ResumeUploadView(APIView):
                 "Node.js"
             ]
 
+            detected_skills_lower = {
+                skill.lower() for skill in extracted_skills
+            }
+
             missing_skills = [
-
-                skill
-
-                for skill in required_skills
-
-                if skill not in extracted_skills
+                skill for skill in required_skills
+                if skill.lower() not in detected_skills_lower
             ]
 
             # =================================================
@@ -268,92 +285,63 @@ class ResumeUploadView(APIView):
 
             ats_score = 0
 
-            ats_score += min(
-                len(extracted_skills) * 4,
-                40
-            )
-
-            ats_score += min(
-                len(extracted_experience) * 5,
-                30
-            )
-
-            ats_score += min(
-                len(extracted_education) * 3,
-                15
-            )
+            ats_score += min(len(extracted_skills) * 4, 40)
+            ats_score += min(len(extracted_experience) * 5, 30)
+            ats_score += min(len(extracted_education) * 3, 15)
 
             if len(resume_text) > 1000:
                 ats_score += 15
 
-            ats_score = min(
-                ats_score,
-                100
+            ats_score = min(ats_score, 100)
+
+            # =================================================
+            # SAVE INITIAL RESUME DATA
+            # =================================================
+
+            user_id = str(request.user.id)
+
+            resume_document = {
+
+                "user_id": user_id,
+
+                "resume_name": filename,
+                "resume_url": file_url,
+                "resume_text": resume_text,
+
+                "skills": extracted_skills,
+                "experience": extracted_experience,
+                "education": extracted_education,
+
+                "missing_skills": missing_skills,
+
+                "ats_score": ats_score,
+
+                "ai_analysis": "",
+                "ai_status": "processing",
+
+                "uploaded_at": datetime.utcnow()
+            }
+
+            insert_result = resume_collection.insert_one(
+                resume_document
             )
 
+            print("RESUME INSERTED:", insert_result.inserted_id)
+
             # =================================================
-            # AI ANALYSIS
+            # START AI ANALYSIS IN BACKGROUND
             # =================================================
 
-            try:
-
-                ai_analysis = analyze_resume(
+            analysis_thread = threading.Thread(
+                target=run_background_analysis,
+                args=(
+                    insert_result.inserted_id,
                     resume_text
-                )
-
-            except Exception:
-
-                ai_analysis = (
-                    "AI analysis unavailable"
-                )
-
-            # =================================================
-            # USER ID
-            # =================================================
-
-            user_id = str(
-                request.user.id
+                ),
+                daemon=True
             )
 
-            # =================================================
-            # SAVE TO MONGODB
-            # =================================================
-
-            resume_collection.insert_one({
-
-                "user_id":
-                user_id,
-
-                "resume_name":
-                filename,
-
-                "resume_url":
-                file_url,
-
-                "resume_text":
-                resume_text,
-
-                "skills":
-                extracted_skills,
-
-                "experience":
-                extracted_experience,
-
-                "education":
-                extracted_education,
-
-                "missing_skills":
-                missing_skills,
-
-                "ats_score":
-                ats_score,
-
-                "ai_analysis":
-                ai_analysis,
-
-                "uploaded_at":
-                datetime.utcnow()
-            })
+            analysis_thread.start()
 
             # =================================================
             # RESPONSE
@@ -363,145 +351,127 @@ class ResumeUploadView(APIView):
 
                 "success": True,
 
-                "message":
-                "Resume Uploaded Successfully",
+                "message": "Resume Uploaded Successfully",
 
-                "resume_name":
-                filename,
+                "resume_id": str(insert_result.inserted_id),
 
-                "resume_url":
-                file_url,
+                "resume_name": filename,
+                "resume_url": file_url,
+                "resume_text": resume_text,
 
-                "skills":
-                extracted_skills,
+                "skills": extracted_skills,
+                "experience": extracted_experience,
+                "education": extracted_education,
 
-                "experience":
-                extracted_experience,
+                "missing_skills": missing_skills,
 
-                "education":
-                extracted_education,
+                "ats_score": ats_score,
 
-                "missing_skills":
-                missing_skills,
+                "ai_analysis": "",
+                "ai_status": "processing"
 
-                "ats_score":
-                ats_score,
+            }, status=200)
 
-                "ai_analysis":
-                ai_analysis
+        except Exception as error:
 
-            })
-
-        except Exception as e:
+            print("RESUME UPLOAD ERROR:", error)
 
             return Response({
-
                 "success": False,
+                "message": str(error)
+            }, status=500)
 
-                "message": str(e)
 
-            }, status=500) # =========================================================
+# =========================================================
 # RESUME ANALYTICS
 # =========================================================
 
 class ResumeAnalyticsView(APIView):
 
-    permission_classes = [
-        IsAuthenticated
-    ]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
 
         try:
 
-            user_id = str(
-                request.user.id
-            )
+            user_id = str(request.user.id)
 
             resume = resume_collection.find_one(
-                {
-                    "user_id": user_id
-                },
-                sort=[
-                    ("uploaded_at", -1)
-                ]
+                {"user_id": user_id},
+                sort=[("uploaded_at", -1)]
             )
+
+            # =================================================
+            # DEBUG LOGS
+            # =================================================
+
+            print("\n========== RESUME ANALYTICS DEBUG ==========")
+
+            print("ANALYTICS USER:", request.user.id)
+
+            print("ANALYTICS DOCUMENT:", resume)
+
+            if resume:
+
+                print(
+                    "ANALYTICS AI STATUS:",
+                    resume.get("ai_status")
+                )
+
+                print(
+                    "ANALYTICS AI RESULT:",
+                    resume.get("ai_analysis")
+                )
+
+            print("============================================\n")
+
+            # =================================================
+            # NO RESUME FOUND
+            # =================================================
 
             if not resume:
 
                 return Response({
-
                     "success": False,
-
-                    "message":
-                    "No Resume Found"
-
+                    "message": "No Resume Found"
                 }, status=404)
+
+            # =================================================
+            # RESPONSE
+            # =================================================
 
             return Response({
 
                 "success": True,
 
-                "resume_name":
-                resume.get(
-                    "resume_name"
-                ),
+                "resume_id": str(resume["_id"]),
 
-                "resume_url":
-                resume.get(
-                    "resume_url"
-                ),
+                "resume_name": resume.get("resume_name", ""),
+                "resume_url": resume.get("resume_url", ""),
 
-                "ats_score":
-                resume.get(
-                    "ats_score",
-                    0
-                ),
+                "resume_text": resume.get("resume_text", ""),
 
-                "skills":
-                resume.get(
-                    "skills",
-                    []
-                ),
+                "ats_score": resume.get("ats_score", 0),
 
-                "experience":
-                resume.get(
-                    "experience",
-                    []
-                ),
+                "skills": resume.get("skills", []),
+                "experience": resume.get("experience", []),
+                "education": resume.get("education", []),
 
-                "education":
-                resume.get(
-                    "education",
-                    []
-                ),
+                "missing_skills": resume.get("missing_skills", []),
 
-                "missing_skills":
-                resume.get(
-                    "missing_skills",
-                    []
-                ),
+                "ai_analysis": resume.get("ai_analysis", ""),
 
-                "ai_analysis":
-                resume.get(
-                    "ai_analysis",
-                    ""
-                ),
+                "ai_status": resume.get("ai_status", "processing"),
 
-                "uploaded_at":
-                resume.get(
-                    "uploaded_at"
-                )
+                "uploaded_at": resume.get("uploaded_at")
 
             })
 
-        except Exception as e:
+        except Exception as error:
+
+            print("RESUME ANALYTICS ERROR:", error)
 
             return Response({
-
                 "success": False,
-
-                "message":
-                str(e)
-
+                "message": str(error)
             }, status=500)
