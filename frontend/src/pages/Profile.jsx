@@ -145,9 +145,14 @@ const Profile = () => {
             backgroundColor: "background.paper",
             backdropFilter: "blur(20px)",
             border: "1px solid",
-            borderColor: "divider",
-            boxShadow:
-              "0px 25px 80px rgba(0,0,0,0.45)",
+            borderColor: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255,255,255,0.25)"
+                : theme.palette.divider,
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0px 25px 80px rgba(0,0,0,0.45)"
+                : "0px 25px 60px rgba(15,23,42,0.12)",
           }}
         >
           <Stack
@@ -176,8 +181,10 @@ const Profile = () => {
                   width: 250,
                   height: 250,
                   borderRadius: "50%",
-                  background:
-                    "rgba(255,255,255,0.12)",
+                  background: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(255,255,255,0.12)"
+                      : "rgba(37,99,235,0.10)",
                   top: -80,
                   right: -80,
                 }}
@@ -198,8 +205,8 @@ const Profile = () => {
                       width: { xs: 112, sm: 150 },
                       height: { xs: 112, sm: 150 },
                       margin: "auto",
-                      border:
-                        "5px solid rgba(255,255,255,0.25)",
+                      border: "5px solid",
+                      borderColor: "divider",
                       boxShadow:
                         "0px 15px 40px rgba(0,0,0,0.35)",
                       fontSize: "55px",
@@ -319,8 +326,10 @@ const Profile = () => {
 
                     <Divider
                       sx={{
-                        borderColor:
-                          "rgba(255,255,255,0.2)",
+                        borderColor: (theme) =>
+                          theme.palette.mode === "dark"
+                            ? "rgba(255,255,255,0.2)"
+                            : theme.palette.divider,
                       }}
                     />
 
@@ -339,8 +348,10 @@ const Profile = () => {
 
                     <Divider
                       sx={{
-                        borderColor:
-                          "rgba(255,255,255,0.2)",
+                        borderColor: (theme) =>
+                          theme.palette.mode === "dark"
+                            ? "rgba(255,255,255,0.2)"
+                            : theme.palette.divider,
                       }}
                     />
 

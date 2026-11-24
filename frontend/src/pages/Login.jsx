@@ -219,8 +219,10 @@ const handleRegister = async () => {
           width: 350,
           height: 350,
           borderRadius: "50%",
-          background:
-            "rgba(59,130,246,0.25)",
+          background: (theme) =>
+            theme.palette.mode === "dark"
+              ? "rgba(59,130,246,0.25)"
+              : "rgba(37,99,235,0.14)",
           filter: "blur(120px)",
           top: -100,
           left: -100,
@@ -233,8 +235,10 @@ const handleRegister = async () => {
           width: 350,
           height: 350,
           borderRadius: "50%",
-          background:
-            "rgba(168,85,247,0.25)",
+          background: (theme) =>
+            theme.palette.mode === "dark"
+              ? "rgba(168,85,247,0.25)"
+              : "rgba(124,58,237,0.12)",
           filter: "blur(120px)",
           bottom: -100,
           right: -100,
@@ -259,8 +263,10 @@ const handleRegister = async () => {
           backdropFilter: "blur(20px)",
           border: "1px solid",
           borderColor: "divider",
-          boxShadow:
-            "0 25px 80px rgba(0,0,0,0.45)",
+          boxShadow: (theme) =>
+            theme.palette.mode === "dark"
+              ? "0 25px 80px rgba(0,0,0,0.45)"
+              : "0 25px 80px rgba(15,23,42,0.16)",
         }}
       >
 
@@ -270,11 +276,9 @@ const handleRegister = async () => {
           sx={{
             flex: 1,
             p: { xs: 3, sm: 4, md: 6 },
-            background: (theme) =>
-              theme.palette.mode === "dark"
-                ? "linear-gradient(180deg,#1E3A8A,#2563EB,#7C3AED)"
-                : theme.palette.background.paper,
-            color: "text.primary",
+            background:
+              "linear-gradient(180deg,#1E3A8A,#2563EB,#7C3AED)",
+            color: "#FFFFFF",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -287,8 +291,9 @@ const handleRegister = async () => {
               width: { xs: 64, sm: 90 },
               height: { xs: 64, sm: 90 },
               mb: { xs: 2, sm: 4 },
-              background:
-                "rgba(255,255,255,0.15)",
+              background: "rgba(255,255,255,0.18)",
+              color: "#FFFFFF",
+              border: "1px solid rgba(255,255,255,0.24)",
               backdropFilter: "blur(10px)",
             }}
           >
@@ -339,7 +344,9 @@ const handleRegister = async () => {
                 px: { xs: 2, sm: 3 },
                 py: 2,
                 borderRadius: "18px",
-                backgroundColor: "action.hover",
+                color: "#FFFFFF",
+                backgroundColor: "rgba(255,255,255,0.14)",
+                border: "1px solid rgba(255,255,255,0.2)",
               }}
             >
               <Typography
@@ -349,7 +356,7 @@ const handleRegister = async () => {
                 10K+
               </Typography>
 
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ color: "inherit" }}>
                 Users
               </Typography>
             </Paper>
@@ -359,7 +366,9 @@ const handleRegister = async () => {
                 px: 3,
                 py: 2,
                 borderRadius: "18px",
-                backgroundColor: "action.hover",
+                color: "#FFFFFF",
+                backgroundColor: "rgba(255,255,255,0.14)",
+                border: "1px solid rgba(255,255,255,0.2)",
               }}
             >
               <Typography
@@ -369,7 +378,7 @@ const handleRegister = async () => {
                 98%
               </Typography>
 
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ color: "inherit" }}>
                 Accuracy
               </Typography>
             </Paper>
@@ -449,11 +458,23 @@ const handleRegister = async () => {
                           "18px",
                         backgroundColor: "background.default",
                         color: "text.primary",
+                        "& fieldset": {
+                          borderColor: "divider",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "primary.main",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "primary.main",
+                          borderWidth: 2,
+                        },
                       },
-
-                    "& fieldset": {
-                      borderColor: "divider",
-                    },
+                    "& input:-webkit-autofill, & input:-webkit-autofill:hover, & input:-webkit-autofill:focus": (theme) => ({
+                      WebkitTextFillColor: theme.palette.text.primary,
+                      WebkitBoxShadow: `0 0 0 1000px ${theme.palette.background.default} inset`,
+                      caretColor: theme.palette.text.primary,
+                      transition: "background-color 9999s ease-out 0s",
+                    }),
                   }}
                 />
               )
@@ -480,17 +501,27 @@ const handleRegister = async () => {
                 },
               }}
               sx={{
-                "& .MuiOutlinedInput-root":
-                  {
-                    borderRadius:
-                      "18px",
-                    backgroundColor: "background.default",
-                    color: "text.primary",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "18px",
+                  backgroundColor: "background.default",
+                  color: "text.primary",
+                  "& fieldset": {
+                    borderColor: "divider",
                   },
-
-                "& fieldset": {
-                  borderColor: "divider",
+                  "&:hover fieldset": {
+                    borderColor: "primary.main",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "primary.main",
+                    borderWidth: 2,
+                  },
                 },
+                "& input:-webkit-autofill, & input:-webkit-autofill:hover, & input:-webkit-autofill:focus": (theme) => ({
+                  WebkitTextFillColor: theme.palette.text.primary,
+                  WebkitBoxShadow: `0 0 0 1000px ${theme.palette.background.default} inset`,
+                  caretColor: theme.palette.text.primary,
+                  transition: "background-color 9999s ease-out 0s",
+                }),
               }}
             />
 
@@ -540,17 +571,27 @@ const handleRegister = async () => {
                 },
               }}
               sx={{
-                "& .MuiOutlinedInput-root":
-                  {
-                    borderRadius:
-                      "18px",
-                    backgroundColor: "background.default",
-                    color: "text.primary",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "18px",
+                  backgroundColor: "background.default",
+                  color: "text.primary",
+                  "& fieldset": {
+                    borderColor: "divider",
                   },
-
-                "& fieldset": {
-                  borderColor: "divider",
+                  "&:hover fieldset": {
+                    borderColor: "primary.main",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "primary.main",
+                    borderWidth: 2,
+                  },
                 },
+                "& input:-webkit-autofill, & input:-webkit-autofill:hover, & input:-webkit-autofill:focus": (theme) => ({
+                  WebkitTextFillColor: theme.palette.text.primary,
+                  WebkitBoxShadow: `0 0 0 1000px ${theme.palette.background.default} inset`,
+                  caretColor: theme.palette.text.primary,
+                  transition: "background-color 9999s ease-out 0s",
+                }),
               }}
             />
 
@@ -579,8 +620,10 @@ const handleRegister = async () => {
                     sx={{
                       cursor:
                         "pointer",
-                      color:
-                        "#60A5FA",
+                      color: (theme) =>
+                        theme.palette.mode === "dark"
+                          ? "#60A5FA"
+                          : theme.palette.primary.dark,
                     }}
                     onClick={() =>
                       navigate(
@@ -704,7 +747,10 @@ const handleRegister = async () => {
               <Box
                 component="span"
                 sx={{
-                  color: "#60A5FA",
+                  color: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "#60A5FA"
+                      : theme.palette.primary.dark,
                   cursor: "pointer",
                   ml: 1,
                   fontWeight: "bold",

@@ -40,11 +40,15 @@ export const ThemeProviderCustom = ({ children }) => {
             main: "#2563EB",
           },
 
+          secondary: {
+            main: "#7C3AED",
+          },
+
           background: {
             default:
               mode === "dark"
                 ? "#020617"
-                : "#FFFFFF",
+                : "#F1F5F9",
 
             paper:
               mode === "dark"
@@ -58,7 +62,16 @@ export const ThemeProviderCustom = ({ children }) => {
           divider:
             mode === "dark"
               ? "rgba(255,255,255,0.12)"
-              : "rgba(15,23,42,0.12)",
+              : "rgba(15,23,42,0.16)",
+        },
+        components: {
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                transition: "background-color 200ms ease, color 200ms ease",
+              },
+            },
+          },
         },
       }),
     [mode]

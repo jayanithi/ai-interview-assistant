@@ -266,10 +266,10 @@ const Settings = () => {
         sx={{
           minHeight: "100vh",
 
-          background:
+          background: (theme) =>
             mode === "dark"
               ? "linear-gradient(to bottom right,#020617,#0f172a,#111827)"
-              : "#FFFFFF",
+              : theme.palette.background.default,
 
            px: {
       xs: 2,
@@ -294,10 +294,10 @@ const Settings = () => {
 
             overflow: "hidden",
 
-            background:
+            background: (theme) =>
               mode === "dark"
                 ? "rgba(255,255,255,0.05)"
-                : "rgba(255,255,255,0.85)",
+                : theme.palette.background.paper,
 
             backdropFilter: "blur(20px)",
 
@@ -351,10 +351,12 @@ const Settings = () => {
 
                   borderRadius: "25px",
 
-                  background:
+                  backgroundColor:
                     mode === "dark"
                       ? "rgba(255,255,255,0.03)"
-                      : "#FFFFFF",
+                      : "background.default",
+                  border: mode === "dark" ? "none" : "1px solid",
+                  borderColor: "divider",
                 }}
               >
                 <Stack
@@ -425,10 +427,12 @@ const Settings = () => {
 
                   borderRadius: "25px",
 
-                  background:
+                  backgroundColor:
                     mode === "dark"
                       ? "rgba(255,255,255,0.03)"
-                      : "#FFFFFF",
+                      : "background.default",
+                  border: mode === "dark" ? "none" : "1px solid",
+                  borderColor: "divider",
                 }}
               >
                 <Stack
@@ -476,10 +480,12 @@ const Settings = () => {
 
                   borderRadius: "25px",
 
-                  background:
+                  backgroundColor:
                     mode === "dark"
                       ? "rgba(255,255,255,0.03)"
-                      : "#FFFFFF",
+                      : "background.default",
+                  border: mode === "dark" ? "none" : "1px solid",
+                  borderColor: "divider",
                 }}
               >
                 <Stack spacing={3}>

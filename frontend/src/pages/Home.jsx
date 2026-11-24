@@ -52,7 +52,10 @@ function Home() {
           position: 'relative',
           overflow: 'hidden',
           width: '100%',
-          backgroundColor: 'background.default',
+          background: (theme) =>
+            theme.palette.mode === 'dark'
+              ? theme.palette.background.default
+              : 'linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 55%, #F5F3FF 100%)',
           color: 'text.primary'
         }}
       >
@@ -63,7 +66,10 @@ function Home() {
             width: 400,
             height: 400,
             borderRadius: '50%',
-            background: 'rgba(59,130,246,0.25)',
+            background: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(59,130,246,0.25)'
+                : 'rgba(37,99,235,0.12)',
             filter: 'blur(120px)',
             top: -100,
             right: -100
@@ -76,7 +82,10 @@ function Home() {
             width: 300,
             height: 300,
             borderRadius: '50%',
-            background: 'rgba(168,85,247,0.25)',
+            background: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(168,85,247,0.25)'
+                : 'rgba(124,58,237,0.10)',
             filter: 'blur(100px)',
             bottom: -80,
             left: -80
@@ -110,7 +119,8 @@ function Home() {
                     color: 'text.primary',
                     backgroundColor: 'background.paper',
                     backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.1)'
+                    border: '1px solid',
+                    borderColor: 'divider'
                   }}
                 />
 
@@ -131,8 +141,10 @@ function Home() {
                   <Box
                     component="span"
                     sx={{
-                      background:
-                        'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+                      background: (theme) =>
+                        theme.palette.mode === 'dark'
+                          ? 'linear-gradient(90deg, #3b82f6, #8b5cf6)'
+                          : 'linear-gradient(90deg, #1d4ed8, #6d28d9)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent'
                     }}
@@ -180,8 +192,10 @@ function Home() {
     textTransform: 'none',
     fontSize: '1rem',
     fontWeight: 700,
-    background:
-      'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+    background: (theme) =>
+      theme.palette.mode === 'dark'
+        ? 'linear-gradient(90deg, #3b82f6, #8b5cf6)'
+        : 'linear-gradient(90deg, #1d4ed8, #6d28d9)',
     boxShadow:
       '0 10px 30px rgba(59,130,246,0.4)',
     '&:hover': {
@@ -243,7 +257,10 @@ function Home() {
                           transition: '0.4s',
                           '&:hover': {
                             transform: 'translateY(-10px)',
-                            borderColor: '#3b82f6',
+                            borderColor: (theme) =>
+                              theme.palette.mode === 'dark'
+                                ? '#3b82f6'
+                                : '#1d4ed8',
                             boxShadow:
                               '0 20px 40px rgba(59,130,246,0.25)'
                           }
@@ -258,8 +275,9 @@ function Home() {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
+                              color: '#FFFFFF',
                               background:
-                                'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                                'linear-gradient(135deg, #2563eb, #7c3aed)',
                               mb: 3
                             }}
                           >
